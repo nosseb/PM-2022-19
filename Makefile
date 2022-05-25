@@ -1,10 +1,20 @@
 
 SRCS_ALL = $(wildcard src/*.c)
 
+# all: library.cpp main.cpp
+# $@ evaluates to all
+# $< evaluates to library.cpp
+# $^ evaluates to library.cpp main.cpp
+
+
+
 # Zone éditable
 
+# fichiers explus de la compilation
 SRCS_EXCL   = 
+# fichier principal
 SRCS_MAIN   = $(wildcard src/chariot*.c)
+# fichiers à compiler
 SRCS_OTH    = $(filter-out ${SRCS_MAIN} ${SRCS_EXCL}, ${SRCS_ALL})
 
 CFLAGS		= -DDEBUG
@@ -28,7 +38,7 @@ $(EXECS) : % : %.o $(OBJS_OTH)
 	gcc -o $@ $^ $(LDFLAGS)
 
 %.o : %.c
-	gcc -c -o $@ $(CFLAGS) $<
+	gcc -c -o build/$@ $(CFLAGS) $<
 
 # clean:
 # 	rm -f *.o $(EXECS)

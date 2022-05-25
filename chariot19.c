@@ -16,20 +16,30 @@
 
 /* Configuration */
 
-#define L_BRAS      0.15000 // m
-#define D_BRAS      0.00300 // m
+#define L_BRAS      1.50000 // m
+#define D_BRAS      0.03000 // m
+#define R_BRAS      0.01500 // m
 #define M_BRAS      3.20000 // Kg
 
-#define H_MASSE     0.00600 // m
-#define D_MASSE     0.00700 // m
+#define H_MASSE     0.06000 // m
+#define D_MASSE     0.07000 // m
+#define R_MASSE     0.03500 // m
 #define M_MASSE     2.00000 // Kg
 
-#define DIST_MASSE  0.14600 // m
+#define DIST_MASSE  1.46000 // m
 
 #define M_CHARIOT   3.00000 // Kg
 #define F_CHARIOT   26.00 * 1000 // N * m^-1 * s^-1
 
 #define F_PIVOT     0.00900 // N * m * rad^-1 * s^-1
+
+// Constantes dépendates des valeurs précédentes
+#define M_SUBSYS    M_BRAS + M_MASSE // Kg
+#define I_MASSE     M_MASSE * DIST_MASSE * DIST_MASSE + M_MASSE * ( 3.0 * (R_BRAS * R_BRAS + R_MASSE * R_MASSE ) + H_MASSE * H_MASSE) / 12.0 // Kg * m^2
+#define I_BRAS      M_BRAS * (R_BRAS * R_BRAS + L_BRAS * L_BRAS / 3.0) / 4.0 // Kg * m^2
+#define I_SUBSYS    I_BRAS + I_MASSE // Kg * m^2
+#define DIST_PG     ((M_MASSE * DIST_MASSE) + ((M_BRAS * L_BRAS) / 2.0 )) / (M_BRAS + M_MASSE) // m
+
 
 
 /**
@@ -45,7 +55,12 @@ void impLigneDonnees(double temps, double pos, double vit, double angle, double 
 }
 
 
-/* Execution */
+/**
+ * Fonction principale.
+ * @param argc Nombre d'arguments passés en ligne de commande.
+ * @param argv Tableau contenant les arguments passés en ligne de commande.
+ * @return Code de sortie.
+ */
 int main(int argc, char *argv[]) {
 
     // Set locale

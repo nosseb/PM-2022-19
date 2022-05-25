@@ -40,7 +40,7 @@
  * @param angle Position angulaire du pendule.
  * @param vitAng Vitesse angulaire du pendule.
  */
-void impLigneDonnées(double temps, double pos, double vit, double angle, double vitAng) {
+void impLigneDonnees(double temps, double pos, double vit, double angle, double vitAng) {
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
 }
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
 	/* Récupération des valeurs numériques des arguments par atof() */
     double pas = atof(argv[1]);
-    double durée = atof(argv[2]);
+    double duree = atof(argv[2]);
     double angle = atof(argv[3]);
 
 

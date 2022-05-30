@@ -78,9 +78,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* Récupération des valeurs numériques des arguments par atof() */
-    double pas = atof(argv[1]);
-    double duree = atof(argv[2]);
-    double angle = atof(argv[3]);
+    double pas      = atof(argv[1]);
+    double duree    = atof(argv[2]);
+    double angle    = atof(argv[3]);
 
 
 	/* Votre code */

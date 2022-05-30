@@ -1,37 +1,62 @@
-SRCS_ALL = $(wildcard *.c)
+# Sélection de tout les fichiers source c.
+SRCS_ALL	= $(wildcard *.c)
 
+
+###############################################################################
 # Zone éditable
 
-SRCS_EXCL = 
-SRCS_MAIN= $(wildcard chariot*.c)
-SRCS_OTH = $(filter-out ${SRCS_MAIN} ${SRCS_EXCL}, ${SRCS_ALL})
 
-CFLAGS= -DDEBUG
-LDFLAGS= -lm
+# Fichier à exclure de la compilation.
+SRCS_EXCL	= 
+# Fichier source principal.
+SRCS_MAIN	= $(wildcard chariot*.c)
+# Fichiers à compiler autre que le source principal.
+SRCS_OTH 	= $(filter-out ${SRCS_MAIN} ${SRCS_EXCL}, ${SRCS_ALL})
 
+# Options passées au compilateur.
+# -DDEBUG active la librairie de débogage.
+CFLAGS		= -DDEBUG
+# Options passées au linker (éditeur de liens).
+# -lm permet de lier (-l) la bibliothèque mathématique (libm) qui contient \
+<math.h>.
+LDFLAGS		= -lm
+
+
+###############################################################################
 # Zone normalement non modifiable
 
-EXECS	 = $(patsubst %.c,%,$(SRCS_MAIN))
-OBJS_MAIN = $(SRCS_MAIN:.c=.o)
-HEADS_OTH= $(SRCS_OTH:.c=.h)
-OBJS_OTH = $(SRCS_OTH:.c=.o)
+# Nom de l'exécutable.
+EXECS		= $(patsubst %.c,%,$(SRCS_MAIN))
+# Nom du fichier objet principal, obtenu par substitution de %.c par %.o.
+OBJS_MAIN	= $(SRCS_MAIN:.c=.o)
+# Nom des fichiers headers, obtenu par substitution de %.c par %.h.
+HEADS_OTH	= $(SRCS_OTH:.c=.h)
+# Nom des fichiers objets, obtenu par substitution de %.c par %.o.
+OBJS_OTH	= $(SRCS_OTH:.c=.o)
 
-.PHONY: clean
 
+# Tâche par défaut.
+# Nécessite la présence de l'éxécutable.
 all: $(EXECS)
 
+# Tâche associé au fichier objet principal.
+# Nécessite la présence du fichier source principal.
 $(OBJS_MAIN) : %.o : %.c $(HEADS_OTH) Makefile
 	gcc -c -o $@ $(CFLAGS) $<
 
+# Tâche associée à l'éxécutable.
+# Nécessite la présence du fichier objet principal.
 $(EXECS) : % : %.o $(OBJS_OTH)
 	gcc -o $@ $^ $(LDFLAGS)
 
+# Tâche associée aux fichiers objets.
+# Nécessite le fichier source associé.
 %.o : %.c
 	gcc -c -o $@ $(CFLAGS) $<
 
-# clean:
-# 	rm -f *.o $(EXECS)
 
-# clean sans supprimer les exécutables
+# Nettoie les fichiers objets.
+# .PHONY indique que cette tâche ne craie pas de fichier.
+.PHONY: clean
 clean:
 	rm -f *.o

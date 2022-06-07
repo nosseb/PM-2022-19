@@ -60,3 +60,7 @@ $(EXECS) : % : %.o $(OBJS_OTH)
 .PHONY: clean
 clean:
 	rm -f *.o
+	
+.PHONY: mov
+mov:
+	cp chariot19.c /mnt/c/e_Tous\ mes\ dossiers/a\ sauvegarder\ provisoir/Cours/ENSISA/1A/S_6/projet\ maths/export

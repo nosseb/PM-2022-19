@@ -70,14 +70,12 @@ int main(int argc, char *argv[]) {
 
     // Set locale
 	char *s=setlocale(LC_NUMERIC,"fr_FR");
-	double float a = 
-	double float b = 
-	double float c = 
-	double float d =
-	double float e = 
-	double float f = 
-	double float g = 
-	double float h = 
+	double float a1 = 0,648780487805;
+	double float a2 = 0,648780487805;
+	double float a3 = 0,0317073170732;
+	double float b1 = 0,798234880614;
+	double float b2 = 7,83068417882;
+	double float b3 = 0,0135039735442;
 	 
 
     // Check arguments

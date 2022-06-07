@@ -50,6 +50,7 @@
  * @param angle Position angulaire du pendule.
  * @param vitAng Vitesse angulaire du pendule.
  */
+
 void impLigneDonnees(double temps, double pos, double vit, double angle, double vitAng) {
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
 }
@@ -97,6 +98,9 @@ int main(int argc, char *argv[]) {
     impLigneDonnées(678, 6789, 56789, 5678, 6789);
     impLigneDonnées(456, 4567, 678, 5678, 45678);
     */
+   for (float i = 0; i <= 10; i=i+0.1) {
+        impLigneDonnees(i, sin(i),0,0,0);
+    }
 
 	return EXIT_SUCCESS;
 }

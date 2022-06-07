@@ -29,9 +29,9 @@
 #define DIST_MASSE  1.46000 // m
 
 #define M_CHARIOT   3.00000 // Kg
-#define F_CHARIOT   26.00 * 1000 // N * m^-1 * s^-1
+#define F_CHARIOT   2.600 * 1000 // N * m^-1 * s^-1
 
-#define F_PIVOT     0.00900 // N * m * rad^-1 * s^-1
+#define F_PIVOT     0.0900 // N * m * s* rad^-1 
 
 // Constantes dépendates des valeurs précédentes
 #define M_SUBSYS    M_BRAS + M_MASSE // Kg
@@ -83,7 +83,6 @@ vecteur vectScalar(vecteur v1, double s) {
     res.z = v1.z * s;
     return res;
 };
-
 
 /**
  * @brief Affiche 5 doubles en notation scientifique séparés par des tabulations.
@@ -159,6 +158,26 @@ int main(int argc, char *argv[]) {
 
     // Set locale
 	char *s=setlocale(LC_NUMERIC,"fr_FR");
+	double float a = 8.2;
+	double float b = 5.3196*pow(10,-4)*cos(pos.x);
+	double float c = -2600; // valeur à vérifier : semble très grande
+	double float d = 5.3196*pow(10,-4)*sin(pos.x);
+	double float e = 5.3196*pow(10,-4)*cos(pos.x);
+	double float f = 4.865000054;
+	double float g1= -5.2185276*pow(10,-3)*sin(pos.x);
+	double float h = -0.09;
+	
+	// équations de notre système
+
+	dSec.x = (g1-vit.x*(c*e/a) // dérivée seconde de x 
+		+vit.y*h
+		-pow(vit.y,2)*(d*e/a))
+		/(f-b*e/a);
+
+	dSec.y = (g1-vit.x*(c*f/b) // dérivée seconde de y
+		+vit.y*h
+		-pow(vit.y,2)*(d*f/b))
+		/(e-a*f/b);
 
     // Check arguments
 	if (s == NULL) {

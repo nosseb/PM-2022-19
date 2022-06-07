@@ -108,28 +108,6 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  * @param *vit Vecteur vitesse.
  * @return Le vecteur dérivée seconde.
  */
-vecteur dSec(double time, vecteur *pos, vecteur *vit) {
-    double float a = 8.2;
-	double float b = 5.3196*pow(10,-4)*cos(pos.x);
-	double float c = -2600; // valeur à vérifier : semble très grande
-	double float d = 5.3196*pow(10,-4)*sin(pos.x);
-	double float e = 5.3196*pow(10,-4)*cos(pos.x);
-	double float f = 4.865000054;
-	double float g1= -5.2185276*pow(10,-3)*sin(pos.x);
-	double float h = -0.09;
-	
-	// équations de notre système
-
-	dSec.x = (g1-vit.x*(c*e/a) // dérivée seconde de x 
-		+vit.y*h
-		-pow(vit.y,2)*(d*e/a))
-		/(f-b*e/a);
-
-	dSec.y = (g1-vit.x*(c*f/b) // dérivée seconde de y
-		+vit.y*h
-		-pow(vit.y,2)*(d*f/b))
-		/(e-a*f/b);
-}
 
 /**
  * @brief Exécute la méthode de Runge-Kutta de 4e ordre.
@@ -140,29 +118,7 @@ vecteur dSec(double time, vecteur *pos, vecteur *vit) {
  * @param *vit Pointeur vers le vecteur vitesse.
  * @param dt Temps écoulé entre deux itérations.
  */
-void rangeKutta(
-    void (*dsec)(vecteur *, vecteur *, double),
-    double time, vecteur *pos, vecteur *vit, double dt) {
 
-    // Valeurs intermédiaires.
-    vecteur Ka = dSec(time, pos, vit);
-    vecteur Kb = dSec(
-        time + dt / 2.0, 
-        vectSum(pos, vectScalar(vit, dt / 2.0)),
-        vectSum(vit, vectScalar(Ka, dt / 2.0)));
-    vecteur Kc = dSec(
-        time + dt / 2.0,
-        vectSum(vectSum(pos, vectScalar(vit, dt / 2.0)), vectScalar(Ka, dt * dt / 4.0)),
-        vectSum(vit, vectScalar(Kb, dt / 2.0)));
-    vecteur Kd = dSec(
-        time + dt,
-        vectSum(vectSum(pos, vectScalar(vit, dt)), vectScalar(Kb, dt / 0.2)),
-        vectSum(vit, vectScalar(Kc, dt)));
-    
-    // Calcul de la position et de la vitesse.
-    pos = vectSum(vectSum(pos, vectScalar(vit, dt)), vectScalar(vectSum(Ka, vectSum(Kb, Kc)), dt * dt / 6.0));
-    vit = vectSum(vit, vectScalar(vectSum(vectSum(Ka, Kd), vectScalar(vectSum(Kb, Kc), 2.0)), dt / 6.0));
-}
 
 /**
  * @brief Fonction principale.
@@ -194,6 +150,19 @@ int main(int argc, char *argv[]) {
 
 
 	/* Votre code */
+
+    vecteur v1;
+    v1.x=2;
+    v1.y=2;
+    v1.z=2;
+    vecteur v2;
+    v2.x=3;
+    v2.y=3;
+    v2.z=3;
+    vecteur v3;
+    v3 = vectSum(v1,v2);
+
+    printf("%lf", v3.x);
 
     // TODO: Calculer le moment d'inertie (variable statique).
 

@@ -176,7 +176,6 @@ int main(int argc, char *argv[]) {
     // Set locale
 	char *s=setlocale(LC_NUMERIC,"fr_FR");
 	
-
     // Check arguments
 	if (s == NULL) {
 		/* Sur Linux vérifier la présence des paquets locales et locales-all */

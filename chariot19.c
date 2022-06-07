@@ -44,6 +44,14 @@
 #define I_BRAS      M_BRAS * (R_BRAS * R_BRAS + L_BRAS * L_BRAS / 3.0) / 4.0
 
 
+/**
+ * Une structure pour représenter un vecteur de taille 3.
+ */
+typedef struct Vecteur {
+    double x;
+    double y;
+    double z;
+} vecteur;
 
 
 /**
@@ -58,6 +66,35 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
     double vitAng) {
 
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
+}
+
+
+/**
+ * Calcul la dérivée seconde.
+ * @param *pos Vecteur position.
+ * @param *vit Vecteur vitesse.
+ * @param time Temps écoulé depuis le début de la simulation.
+ * @return Le vecteur dérivée seconde.
+ */
+vecteur dSec(vecteur *pos, vecteur *vit, double time) {
+    // TODO: Implémenter la dérivée seconde.
+}
+
+
+/**
+ * Exécute la méthode de Runge-Kutta de 4e ordre.
+ * @param *dsec Fonction à utiliser pour calculer la dérivée seconde.
+ * @param *pos Pointeur vers le vecteur position.
+ * @param *vit Pointeur vers le vecteur vitesse.
+ * @param time Temps écoulé depuis le début de la simulation.
+ * @param dt Temps écoulé entre deux itérations.
+ */
+void rangeKuka(
+    void (*dsec)(vecteur *, vecteur *, double),
+    vecteur *pos, vecteur *vit, double time, double dt) {
+
+    // TODO: Implémenter la méthode de Runge-Kutta de 4e ordre.
+
 }
 
 

@@ -55,7 +55,8 @@ typedef struct Vecteur {
 
 
 /**
- * Calcul la somme de deux vecteurs.
+ * @brief Calcul la somme de deux vecteurs.
+ *
  * @param v1 Premier vecteur.
  * @param v2 Second vecteur.
  * @return vecteur résultat de la somme.
@@ -70,7 +71,8 @@ vecteur vectSum(vecteur v1, vecteur v2) {
 
 
 /**
- * Calcul le produit entre un scalar et un vecteur.
+ * @brief Calcul le produit entre un scalar et un vecteur.
+ *
  * @param v1 Vecteur.
  * @param s Scalar.
  */
@@ -84,7 +86,8 @@ vecteur vectScalar(vecteur v1, double s) {
 
 
 /**
- * Affiche 5 doubles en notation scientifique séparés par des tabulations.
+ * @brief Affiche 5 doubles en notation scientifique séparés par des tabulations.
+ *
  * @param temps Temps écoulé depuis le début de la simulation.
  * @param pos Position du chariot sur le rail.
  * @param vit Vitesse du chariot.
@@ -99,7 +102,8 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
 
 
 /**
- * Calcul la dérivée seconde.
+ * @brief Calcul la dérivée seconde.
+ *
  * @param time Temps écoulé depuis le début de la simulation.
  * @param *pos Vecteur position.
  * @param *vit Vecteur vitesse.
@@ -111,7 +115,8 @@ vecteur dSec(double time, vecteur *pos, vecteur *vit) {
 
 
 /**
- * Exécute la méthode de Runge-Kutta de 4e ordre.
+ * @brief Exécute la méthode de Runge-Kutta de 4e ordre.
+ *
  * @param *dsec Fonction à utiliser pour calculer la dérivée seconde.
  * @param time Temps écoulé depuis le début de la simulation.
  * @param *pos Pointeur vers le vecteur position.
@@ -140,13 +145,12 @@ void rangeKuka(
     // Calcul de la position et de la vitesse.
     pos = vectSum(vectSum(pos, vectScalar(vit, dt)), vectScalar(vectSum(Ka, vectSum(Kb, Kc)), dt * dt / 6.0));
     vit = vectSum(vit, vectScalar(vectSum(vectSum(Ka, Kd), vectScalar(vectSum(Kb, Kc), 2.0)), dt / 6.0));
-    
-
 }
 
 
 /**
- * Fonction principale.
+ * @brief Fonction principale.
+ *
  * @param argc Nombre d'arguments passés en ligne de commande.
  * @param argv Tableau contenant les arguments passés en ligne de commande.
  * @return Code de sortie.

@@ -41,7 +41,6 @@
 #define DIST_PG     ((M_MASSE * DIST_MASSE) + ((M_BRAS * L_BRAS) / 2.0 )) / (M_BRAS + M_MASSE) // m
 
 
-
 /**
  * Affiche 5 doubles en notation scientifique séparés par des tabulations.
  * @param temps Temps écoulé depuis le début de la simulation.
@@ -65,6 +64,15 @@ int main(int argc, char *argv[]) {
 
     // Set locale
 	char *s=setlocale(LC_NUMERIC,"fr_FR");
+	double float a = 
+	double float b = 
+	double float c = 
+	double float d =
+	double float e = 
+	double float f = 
+	double float g = 
+	double float h = 
+	 
 
     // Check arguments
 	if (s == NULL) {

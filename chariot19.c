@@ -35,10 +35,14 @@
 
 // Constantes dépendates des valeurs précédentes
 #define M_SUBSYS    M_BRAS + M_MASSE // Kg
-#define I_MASSE     M_MASSE * DIST_MASSE * DIST_MASSE + M_MASSE * ( 3.0 * (R_BRAS * R_BRAS + R_MASSE * R_MASSE ) + H_MASSE * H_MASSE) / 12.0 // Kg * m^2
-#define I_BRAS      M_BRAS * (R_BRAS * R_BRAS + L_BRAS * L_BRAS / 3.0) / 4.0 // Kg * m^2
-#define I_SUBSYS    I_BRAS + I_MASSE // Kg * m^2
-#define DIST_PG     ((M_MASSE * DIST_MASSE) + ((M_BRAS * L_BRAS) / 2.0 )) / (M_BRAS + M_MASSE) // m
+#define DIST_PG     ((M_MASSE * DIST_MASSE) + ((M_BRAS * L_BRAS) / 2.0 )) \
+    / (M_BRAS + M_MASSE) // m
+
+// Moment d'inerties (Kg * m^2)
+#define I_MASSE     M_MASSE * DIST_MASSE * DIST_MASSE + M_MASSE * ( 3.0 * \
+    (R_BRAS * R_BRAS + R_MASSE * R_MASSE ) + H_MASSE * H_MASSE ) / 12.0
+#define I_BRAS      M_BRAS * (R_BRAS * R_BRAS + L_BRAS * L_BRAS / 3.0) / 4.0
+
 
 
 /**
@@ -49,7 +53,9 @@
  * @param angle Position angulaire du pendule.
  * @param vitAng Vitesse angulaire du pendule.
  */
-void impLigneDonnees(double temps, double pos, double vit, double angle, double vitAng) {
+void impLigneDonnees( double temps, double pos, double vit, double angle, \
+    double vitAng) {
+
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
 }
 
@@ -76,7 +82,7 @@ int main(int argc, char *argv[]) {
 
     // Check arguments
 	if (s == NULL) {
-		/* Sur Linux vérifier la présence des paquets locales et locales-all  */
+		/* Sur Linux vérifier la présence des paquets locales et locales-all */
 		printf("Échec de la francisation des nombres !\n");
 		return EXIT_FAILURE;
 	}
@@ -86,9 +92,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* Récupération des valeurs numériques des arguments par atof() */
-    double pas = atof(argv[1]);
-    double duree = atof(argv[2]);
-    double angle = atof(argv[3]);
+    double pas      = atof(argv[1]);
+    double duree    = atof(argv[2]);
+    double angle    = atof(argv[3]);
 
 
 	/* Votre code */
@@ -98,7 +104,8 @@ int main(int argc, char *argv[]) {
     // TODO: Vérifier que le temps d'échantillonnage est infferieur à tau.
 
     // Affiche l'en-tête du tableau.
-    printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    \tvit. ang. (°/s)\n");
+    printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
+        "\tvit. ang. (°/s)\n");
 
     /*
     impLigneDonnées(0, 78798, 34567, 34567, 345);

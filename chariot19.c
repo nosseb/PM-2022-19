@@ -131,7 +131,6 @@ vecteur dSec(double time, vecteur *pos, vecteur *vit) {
 		/(e-a*f/b);
 }
 
-
 /**
  * @brief Exécute la méthode de Runge-Kutta de 4e ordre.
  *
@@ -164,7 +163,6 @@ void rangeKutta(
     pos = vectSum(vectSum(pos, vectScalar(vit, dt)), vectScalar(vectSum(Ka, vectSum(Kb, Kc)), dt * dt / 6.0));
     vit = vectSum(vit, vectScalar(vectSum(vectSum(Ka, Kd), vectScalar(vectSum(Kb, Kc), 2.0)), dt / 6.0));
 }
-
 
 /**
  * @brief Fonction principale.

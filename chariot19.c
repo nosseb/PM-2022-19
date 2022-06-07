@@ -110,31 +110,30 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  */
 vecteur dSec(double time, vecteur *pos, vecteur *vit) {
 
-    // Variables intermédiaires
-    double float a = 8.2;
-	double float b = 5.3196*pow(10,-4)*cos(pos.x);
-	double float c = -2600; // valeur à vérifier : semble très grande
-	double float d = 5.3196*pow(10,-4)*sin(pos.x);
-	double float e = 5.3196*pow(10,-4)*cos(pos.x);
-	double float f = 4.865000054;
-	double float g1= -5.2185276*pow(10,-3)*sin(pos.x);
-	double float h = -0.09;
+     // Variables intermédiaires
+    float a = 8.2;
+	float b = 5.3196*pow(10,-4)*cos(pos->x);
+	float c = -2600; // valeur à vérifier : semble très grande
+	float d = 5.3196*pow(10,-4)*sin(pos->x);
+	float e = 5.3196*pow(10,-4)*cos(pos->x);
+	float f = 4.865000054;
+	float g1= -5.2185276*pow(10,-3)*sin(pos->x);
+	float h = -0.09;
 	
-	// équations de notre système
+	// équations de notre système    
     vecteur res;
-	res.x = (g1-vit.x*(c*e/a) // dérivée seconde de x 
-		+vit.y*h
-		-pow(vit.y,2)*(d*e/a))
+	res.x = (g1-vit->x*(c*e/a) // dérivée seconde de x 
+		+vit->y*h
+		-pow(vit->y,2)*(d*e/a))
 		/(f-b*e/a);
 
-	res.y = (g1-vit.x*(c*f/b) // dérivée seconde de y
-		+vit.y*h
-		-pow(vit.y,2)*(d*f/b))
+	res.y = (g1-vit->x*(c*f/b) // dérivée seconde de y
+		+vit->y*h
+		-pow(vit->y,2)*(d*f/b))
 		/(e-a*f/b);
 
     return res;
 }
-
 
 /**
  * @brief Exécute la méthode de Runge-Kutta de 4e ordre.

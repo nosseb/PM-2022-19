@@ -122,7 +122,25 @@ void rangeKuka(
     void (*dsec)(vecteur *, vecteur *, double),
     double time, vecteur *pos, vecteur *vit, double dt) {
 
-    // TODO: Implémenter la méthode de Runge-Kutta de 4e ordre.
+    // Valeurs intermédiaires.
+    vecteur Ka = dSec(time, pos, vit);
+    vecteur Kb = dSec(
+        time + dt / 2.0, 
+        vectSum(pos, vectScalar(vit, dt / 2.0)),
+        vectSum(vit, vectScalar(Ka, dt / 2.0)));
+    vecteur Kc = dSec(
+        time + dt / 2.0,
+        vectSum(vectSum(pos, vectScalar(vit, dt / 2.0)), vectScalar(Ka, dt * dt / 4.0)),
+        vectSum(vit, vectScalar(Kb, dt / 2.0)));
+    vecteur Kd = dSec(
+        time + dt,
+        vectSum(vectSum(pos, vectScalar(vit, dt)), vectScalar(Kb, dt / 0.2)),
+        vectSum(vit, vectScalar(Kc, dt)));
+    
+    // Calcul de la position et de la vitesse.
+    pos = vectSum(vectSum(pos, vectScalar(vit, dt)), vectScalar(vectSum(Ka, vectSum(Kb, Kc)), dt * dt / 6.0));
+    vit = vectSum(vit, vectScalar(vectSum(vectSum(Ka, Kd), vectScalar(vectSum(Kb, Kc), 2.0)), dt / 6.0));
+    
 
 }
 

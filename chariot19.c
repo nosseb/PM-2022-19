@@ -100,12 +100,12 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
 
 /**
  * Calcul la dérivée seconde.
+ * @param time Temps écoulé depuis le début de la simulation.
  * @param *pos Vecteur position.
  * @param *vit Vecteur vitesse.
- * @param time Temps écoulé depuis le début de la simulation.
  * @return Le vecteur dérivée seconde.
  */
-vecteur dSec(vecteur *pos, vecteur *vit, double time) {
+vecteur dSec(double time, vecteur *pos, vecteur *vit) {
     // TODO: Implémenter la dérivée seconde.
 }
 
@@ -113,14 +113,14 @@ vecteur dSec(vecteur *pos, vecteur *vit, double time) {
 /**
  * Exécute la méthode de Runge-Kutta de 4e ordre.
  * @param *dsec Fonction à utiliser pour calculer la dérivée seconde.
+ * @param time Temps écoulé depuis le début de la simulation.
  * @param *pos Pointeur vers le vecteur position.
  * @param *vit Pointeur vers le vecteur vitesse.
- * @param time Temps écoulé depuis le début de la simulation.
  * @param dt Temps écoulé entre deux itérations.
  */
 void rangeKuka(
     void (*dsec)(vecteur *, vecteur *, double),
-    vecteur *pos, vecteur *vit, double time, double dt) {
+    double time, vecteur *pos, vecteur *vit, double dt) {
 
     // TODO: Implémenter la méthode de Runge-Kutta de 4e ordre.
 

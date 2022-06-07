@@ -151,8 +151,25 @@ int main(int argc, char *argv[]) {
 
 	/* Votre code */
 
-   
-   
+   vecteur v1;
+    v1.x=2;
+    v1.y=2;
+    v1.z=2;
+    vecteur v2;
+    v2.x=3;
+    v2.y=3;
+    v2.z=3;
+    vecteur v3, v4;
+    v3 = vectSum(v1,v2);
+    v4 = vectScalar(v1,3.000000);
+
+    printf(" la valeur de la somme de v1 et v2 est :\n %lf \n ", v3.x);
+    printf("%lf \n ", v3.y);
+    printf("%lf \n ", v3.z);
+    printf(" la valeur du produit de v1 et v2 est : \n %lf \n ", v4.x);
+    printf("%lf \n ", v4.y);
+    printf("%lf \n ", v4.z);
+
     // TODO: Calculer le moment d'inertie (variable statique).
 
     // TODO: Vérifier que le temps d'échantillonnage est infferieur à tau.

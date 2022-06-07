@@ -55,6 +55,35 @@ typedef struct Vecteur {
 
 
 /**
+ * Calcul la somme de deux vecteurs.
+ * @param v1 Premier vecteur.
+ * @param v2 Second vecteur.
+ * @return vecteur résultat de la somme.
+ */
+vecteur vectSum(vecteur v1, vecteur v2) {
+    vecteur res;
+    res.x = v1.x + v2.x;
+    res.y = v1.y + v2.y;
+    res.z = v1.z + v2.z;
+    return res;
+}
+
+
+/**
+ * Calcul le produit entre un scalar et un vecteur.
+ * @param v1 Vecteur.
+ * @param s Scalar.
+ */
+vecteur vectScalar(vecteur v1, double s) {
+    vecteur res;
+    res.x = v1.x * s;
+    res.y = v1.y * s;
+    res.z = v1.z * s;
+    return res;
+};
+
+
+/**
  * Affiche 5 doubles en notation scientifique séparés par des tabulations.
  * @param temps Temps écoulé depuis le début de la simulation.
  * @param pos Position du chariot sur le rail.

@@ -109,6 +109,8 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  * @return Le vecteur dérivée seconde.
  */
 vecteur dSec(double time, vecteur *pos, vecteur *vit) {
+
+    // Variables intermédiaires
     double float a = 8.2;
 	double float b = 5.3196*pow(10,-4)*cos(pos.x);
 	double float c = -2600; // valeur à vérifier : semble très grande
@@ -119,16 +121,18 @@ vecteur dSec(double time, vecteur *pos, vecteur *vit) {
 	double float h = -0.09;
 	
 	// équations de notre système
-
-	dSec.x = (g1-vit.x*(c*e/a) // dérivée seconde de x 
+    vecteur res;
+	res.x = (g1-vit.x*(c*e/a) // dérivée seconde de x 
 		+vit.y*h
 		-pow(vit.y,2)*(d*e/a))
 		/(f-b*e/a);
 
-	dSec.y = (g1-vit.x*(c*f/b) // dérivée seconde de y
+	res.y = (g1-vit.x*(c*f/b) // dérivée seconde de y
 		+vit.y*h
 		-pow(vit.y,2)*(d*f/b))
 		/(e-a*f/b);
+
+    return res;
 }
 
 

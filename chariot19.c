@@ -109,7 +109,26 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  * @return Le vecteur dérivée seconde.
  */
 vecteur dSec(double time, vecteur *pos, vecteur *vit) {
-    // TODO: Implémenter la dérivée seconde.
+    double float a = 8.2;
+	double float b = 5.3196*pow(10,-4)*cos(pos.x);
+	double float c = -2600; // valeur à vérifier : semble très grande
+	double float d = 5.3196*pow(10,-4)*sin(pos.x);
+	double float e = 5.3196*pow(10,-4)*cos(pos.x);
+	double float f = 4.865000054;
+	double float g1= -5.2185276*pow(10,-3)*sin(pos.x);
+	double float h = -0.09;
+	
+	// équations de notre système
+
+	dSec.x = (g1-vit.x*(c*e/a) // dérivée seconde de x 
+		+vit.y*h
+		-pow(vit.y,2)*(d*e/a))
+		/(f-b*e/a);
+
+	dSec.y = (g1-vit.x*(c*f/b) // dérivée seconde de y
+		+vit.y*h
+		-pow(vit.y,2)*(d*f/b))
+		/(e-a*f/b);
 }
 
 
@@ -158,26 +177,7 @@ int main(int argc, char *argv[]) {
 
     // Set locale
 	char *s=setlocale(LC_NUMERIC,"fr_FR");
-	double float a = 8.2;
-	double float b = 5.3196*pow(10,-4)*cos(pos.x);
-	double float c = -2600; // valeur à vérifier : semble très grande
-	double float d = 5.3196*pow(10,-4)*sin(pos.x);
-	double float e = 5.3196*pow(10,-4)*cos(pos.x);
-	double float f = 4.865000054;
-	double float g1= -5.2185276*pow(10,-3)*sin(pos.x);
-	double float h = -0.09;
 	
-	// équations de notre système
-
-	dSec.x = (g1-vit.x*(c*e/a) // dérivée seconde de x 
-		+vit.y*h
-		-pow(vit.y,2)*(d*e/a))
-		/(f-b*e/a);
-
-	dSec.y = (g1-vit.x*(c*f/b) // dérivée seconde de y
-		+vit.y*h
-		-pow(vit.y,2)*(d*f/b))
-		/(e-a*f/b);
 
     // Check arguments
 	if (s == NULL) {

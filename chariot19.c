@@ -151,19 +151,8 @@ int main(int argc, char *argv[]) {
 
 	/* Votre code */
 
-    vecteur v1;
-    v1.x=2;
-    v1.y=2;
-    v1.z=2;
-    vecteur v2;
-    v2.x=3;
-    v2.y=3;
-    v2.z=3;
-    vecteur v3;
-    v3 = vectSum(v1,v2);
-
-    printf("%lf", v3.x);
-
+   
+   
     // TODO: Calculer le moment d'inertie (variable statique).
 
     // TODO: Vérifier que le temps d'échantillonnage est infferieur à tau.

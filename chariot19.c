@@ -76,11 +76,11 @@ vecteur vectSum(vecteur v1, vecteur v2) {
  * @param v1 Vecteur.
  * @param s Scalar.
  */
-vecteur vectScalar(vecteur v1, double s) {
-    vecteur res;
-    res.x = v1.x * s;
-    res.y = v1.y * s;
-    res.z = v1.z * s;
+vecteur vectScalar(vecteur *v1, double s) {
+    vecteur *res;
+    res->x = v1->x * s;
+    res->y = v1->y * s;
+    res->z = v1->z * s;
     return res;
 };
 
@@ -151,17 +151,18 @@ int main(int argc, char *argv[]) {
 
 	/* Votre code */
 
-   vecteur v1;
-    v1.x=2;
-    v1.y=2;
-    v1.z=2;
-    vecteur v2;
-    v2.x=3;
-    v2.y=3;
-    v2.z=3;
-    vecteur v3, v4;
-    v3 = vectSum(v1,v2);
-    v4 = vectScalar(v1,3.000000);
+   vecteur *v1;
+    v1->x=2;
+    v1->y=2;
+    v1->z=2;
+    vecteur *v2;
+    v2->x=3;
+    v2->y=3;
+    v2->z=3;
+    vecteur *v3; 
+    vecteur *v4;
+    //v3 = vectSum(v1,v2);
+    v4 = vectScalar(v1,4.000000);
 
     printf(" la valeur de la somme de v1 et v2 est :\n %lf \n ", v3.x);
     printf("%lf \n ", v3.y);

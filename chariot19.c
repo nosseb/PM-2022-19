@@ -150,10 +150,11 @@ void rangeKutta(
 
     // Valeurs intermédiaires.
     vecteur Ka = dSec(time, pos, vit);
+    double deltaDivPar2 = dt / 2.0;
     vecteur Kb = dSec(
-        time + dt / 2.0, 
-        vectSum(pos, vectScalar(vit, dt / 2.0)),
-        vectSum(vit, vectScalar(Ka, dt / 2.0)));
+        time + deltaDivPar2, 
+        vectSum(pos, vectScalar(vit, deltaDivPar2)),
+        vectSum(vit, vectScalar(Ka, deltaDivPar2)));
     vecteur Kc = dSec(
         time + dt / 2.0,
         vectSum(vectSum(pos, vectScalar(vit, dt / 2.0)), vectScalar(Ka, dt * dt / 4.0)),

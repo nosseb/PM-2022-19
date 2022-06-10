@@ -55,17 +55,28 @@ typedef struct Vecteur {
 
 
 /**
- * @brief Calcul la somme de deux vecteurs.
+ * @brief Calcul la somme de vecteurs.
  *
- * @param v1 Premier vecteur.
- * @param v2 Second vecteur.
+ * @param v1 Le premier vecteur.
+ * @param v2 Le deuxième vecteur.
+ * @param NULL 
  * @return vecteur résultat de la somme.
  */
-vecteur vectSum(vecteur v1, vecteur v2) {
-    vecteur res;
-    res.x = v1.x + v2.x;
-    res.y = v1.y + v2.y;
-    res.z = v1.z + v2.z;
+vecteur vectSum(const vecteur * ftm, ...) {
+    va_list ap;
+    va_start(ap, ftm);
+
+    vecteur res = {0, 0, 0};
+
+    while (ftm != NULL) {
+        res.x += ftm->x;
+        res.y += ftm->y;
+        res.z += ftm->z;
+        ftm = va_arg(ap, vecteur *);
+    }
+
+    va_end(ap);
+
     return res;
 }
 
@@ -150,22 +161,33 @@ void rangeKutta(
 
     // Valeurs intermédiaires.
     vecteur Ka = dSec(time, pos, vit);
+    
     vecteur Kb = dSec(
         time + dt / 2.0, 
-        vectSum(pos, vectScalar(vit, dt / 2.0)),
-        vectSum(vit, vectScalar(Ka, dt / 2.0)));
+        vectSum(&pos, &vectScalar(vit, dt/2.0), NULL),
+        vectSum( &vit, &vectScalar(Ka, dt/2.0), NULL));
+    
     vecteur Kc = dSec(
         time + dt / 2.0,
-        vectSum(vectSum(pos, vectScalar(vit, dt / 2.0)), vectScalar(Ka, dt * dt / 4.0)),
-        vectSum(vit, vectScalar(Kb, dt / 2.0)));
+        vectSum(&pos, &vectScalar(vit, dt/2.0), 
+            &vectScalar(Ka, dt*dt/4.0), NULL),
+        vectSum(&vit, &vectScalar(Kb, dt/2.0), NULL));
+    
     vecteur Kd = dSec(
         time + dt,
-        vectSum(vectSum(pos, vectScalar(vit, dt)), vectScalar(Kb, dt / 0.2)),
-        vectSum(vit, vectScalar(Kc, dt)));
+        vectSum(&pos, &vectScalar(vit, dt), &vectScalar(Kc, dt/2.0), NULL),
+        vectSum(&vit, &vectScalar(Kc, dt), NULL));
     
     // Calcul de la position et de la vitesse.
-    pos = vectSum(vectSum(pos, vectScalar(vit, dt)), vectScalar(vectSum(Ka, vectSum(Kb, Kc)), dt * dt / 6.0));
-    vit = vectSum(vit, vectScalar(vectSum(vectSum(Ka, Kd), vectScalar(vectSum(Kb, Kc), 2.0)), dt / 6.0));
+    pos = vectSum(
+        &pos, 
+        &vectScalar(vit, dt), 
+        &vectScalar(vectSum(&Ka, &vectSum(Kb, Kc), NULL), dt*dt/6.0), 
+        NULL);
+    vit = vectSum(
+        &vit,
+        &vectScalar(&vectSum(&Ka, &Kd, &vectScalar(vectSum(&Kb, &Kc, NULL), 2.0), NULL), dt/6.0),
+        NULL);
 }
 
 

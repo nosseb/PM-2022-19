@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include "debug.h"
 
@@ -55,26 +56,43 @@ typedef struct Vecteur {
 
 
 /**
+ * @brief Structure pour stocker les résultat de RK4 (position et vitesse).
+ * 
+ */
+typedef struct RK4Result {
+    vecteur position;
+    vecteur vitesse;
+} rk4_result;
+
+
+/**
  * @brief Calcul la somme de vecteurs.
  *
- * @param v1 Le premier vecteur.
- * @param v2 Le deuxième vecteur.
- * @param NULL 
+ * @param v1 Pointeur vers le premier vecteur.
+ * @param v2 Pointeur vers le deuxième vecteur.
+ * @param NULL Indicateuur de fin de liste.
  * @return vecteur résultat de la somme.
  */
-vecteur vectSum(const vecteur * ftm, ...) {
+vecteur *vectSum(const vecteur * ftm, ...) {
+    // Initialisation nb de paramètres variable.
     va_list ap;
     va_start(ap, ftm);
 
-    vecteur res = {0, 0, 0};
+    // Initialisation du résultat.
+    vecteur *res = malloc(sizeof(vecteur));
+    res->x = 0;
+    res->y = 0;
+    res->z = 0;
 
+    // Calcul de la somme.
     while (ftm != NULL) {
-        res.x += ftm->x;
-        res.y += ftm->y;
-        res.z += ftm->z;
+        res->x += ftm->x;
+        res->y += ftm->y;
+        res->z += ftm->z;
         ftm = va_arg(ap, vecteur *);
     }
 
+    // Fin nb de paramètres variable.
     va_end(ap);
 
     return res;
@@ -87,13 +105,14 @@ vecteur vectSum(const vecteur * ftm, ...) {
  * @param v1 Vecteur.
  * @param s Scalar.
  */
-vecteur vectScalar(vecteur v1, double s) {
-    vecteur res;
-    res.x = v1.x * s;
-    res.y = v1.y * s;
-    res.z = v1.z * s;
+vecteur *vectScalar(vecteur *v, double s) {
+    vecteur *res = malloc(sizeof(vecteur));
+    res->x = v->x * s;
+    res->y = v->y * s;
+    res->z = v->z * s;
     return res;
 };
+
 
 /**
  * @brief Affiche 5 doubles en notation scientifique séparés par des tabulations.
@@ -115,11 +134,11 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  * @brief Calcul la dérivée seconde.
  *
  * @param time Temps écoulé depuis le début de la simulation.
- * @param *pos Vecteur position.
- * @param *vit Vecteur vitesse.
+ * @param *pos Pointeur vers vecteur position.
+ * @param *vit Pointeur vers vecteur vitesse.
  * @return Le vecteur dérivée seconde.
  */
-vecteur dSec(double time, vecteur *pos, vecteur *vit) {
+vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 
      // Variables intermédiaires
     float a = 8.2;
@@ -132,13 +151,16 @@ vecteur dSec(double time, vecteur *pos, vecteur *vit) {
 	float h = -0.09;
 	
 	// équations de notre système    
-    vecteur res;
-	res.x = (g1-vit->x*(c*e/a) // dérivée seconde de x 
+    vecteur *res = malloc(sizeof(vecteur));
+
+	res->x = // dérivée seconde de x 
+        (g1-vit->x*(c*e/a)
 		+vit->y*h
 		-pow(vit->y,2)*(d*e/a))
 		/(f-b*e/a);
 
-	res.y = (g1-vit->x*(c*f/b) // dérivée seconde de y
+	res->y = // dérivée seconde de y
+        (g1-vit->x*(c*f/b) 
 		+vit->y*h
 		-pow(vit->y,2)*(d*f/b))
 		/(e-a*f/b);
@@ -155,39 +177,45 @@ vecteur dSec(double time, vecteur *pos, vecteur *vit) {
  * @param *vit Pointeur vers le vecteur vitesse.
  * @param dt Temps écoulé entre deux itérations.
  */
-void rangeKutta(
+rk4_result *rangeKutta(
     void (*dsec)(vecteur *, vecteur *, double),
     double time, vecteur *pos, vecteur *vit, double dt) {
 
     // Valeurs intermédiaires.
-    vecteur Ka = dSec(time, pos, vit);
+    vecteur *Ka = dSec(time, pos, vit);
     
-    vecteur Kb = dSec(
+    vecteur *Kb = dSec(
         time + dt / 2.0, 
-        vectSum(&pos, &vectScalar(vit, dt/2.0), NULL),
-        vectSum( &vit, &vectScalar(Ka, dt/2.0), NULL));
+        vectSum(pos, vectScalar(vit, dt/2.0), NULL),
+        vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
     
-    vecteur Kc = dSec(
+    vecteur *Kc = dSec(
         time + dt / 2.0,
-        vectSum(&pos, &vectScalar(vit, dt/2.0), 
-            &vectScalar(Ka, dt*dt/4.0), NULL),
-        vectSum(&vit, &vectScalar(Kb, dt/2.0), NULL));
+        vectSum(pos, vectScalar(vit, dt/2.0), 
+            vectScalar(Ka, dt*dt/4.0), NULL),
+        vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
     
-    vecteur Kd = dSec(
+    vecteur *Kd = dSec(
         time + dt,
-        vectSum(&pos, &vectScalar(vit, dt), &vectScalar(Kc, dt/2.0), NULL),
-        vectSum(&vit, &vectScalar(Kc, dt), NULL));
+        vectSum(pos, vectScalar(vit, dt), vectScalar(Kc, dt/2.0), NULL),
+        vectSum(vit, vectScalar(Kc, dt), NULL));
     
+    rk4_result *res = malloc(sizeof(rk4_result));
+
     // Calcul de la position et de la vitesse.
-    pos = vectSum(
-        &pos, 
-        &vectScalar(vit, dt), 
-        &vectScalar(vectSum(&Ka, &vectSum(Kb, Kc), NULL), dt*dt/6.0), 
+    // TODO: check si les deux termes sont inversés.
+    res->position = *vectSum(
+        pos, 
+        vectScalar(vit, dt), 
+        vectScalar(vectSum(Ka, vectSum(Kb, Kc), NULL), dt*dt/6.0), 
         NULL);
-    vit = vectSum(
-        &vit,
-        &vectScalar(&vectSum(&Ka, &Kd, &vectScalar(vectSum(&Kb, &Kc, NULL), 2.0), NULL), dt/6.0),
+    res->vitesse = *vectSum(
+        vit,
+        vectScalar(vectSum(Ka, Kd, vectScalar(Kb, 2.0), vectScalar(Kc, 2.0), NULL), dt/6.0),
         NULL);
+    
+    return res;
+
 }
 
 

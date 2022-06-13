@@ -207,15 +207,19 @@ rk4_result *rangeKutta(
     res->position = *vectSum(
         pos, 
         vectScalar(vit, dt), 
-        vectScalar(vectSum(Ka, vectSum(Kb, Kc), NULL), dt*dt/6.0), 
+        vectScalar(Ka, dt*dt/6.0),
+        vectScalar(Kb, dt*dt/6.0),
+        vectScalar(Kc, dt*dt/6.0),
         NULL);
     res->vitesse = *vectSum(
         vit,
-        vectScalar(vectSum(Ka, Kd, vectScalar(Kb, 2.0), vectScalar(Kc, 2.0), NULL), dt/6.0),
+        vectScalar(Ka, dt/6.0),
+        vectScalar(Kb, dt/3.0),
+        vectScalar(Kc, dt/3.0),
+        vectScalar(Kd, dt/6.0),
         NULL);
     
     return res;
-
 }
 
 

@@ -190,16 +190,18 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 	
 	// équations de notre système
 
-	res->x = // dérivée seconde de x 
+    // Dérivée seconde de la position.
+	res->x =
         (g1-vit->x*(c*e/a)
 		+vit->y*h
-		-pow(vit->y,2)*(d*e/a))
+		-pow(vit->y,2.0)*(d*e/a))
 		/(f-b*e/a);
 
-	res->y = // dérivée seconde de y
+    // Dérivée seconde de l'angle.
+	res->y =
         (g1-vit->x*(c*f/b) 
 		+vit->y*h
-		-pow(vit->y,2)*(d*f/b))
+		-pow(vit->y,2.0)*(d*f/b))
 		/(e-a*f/b);
     
     // Libération des vecteurs paramètres si non verrouillés.

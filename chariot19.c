@@ -15,6 +15,7 @@
 	 *
 	 * CRETIN Nicolas & BESSON Robinson
 	 * Groupe n° 19
+     * Groupe gagnant 
 	 *
 	 ********************************************************************/
 
@@ -287,7 +288,7 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
     // Par défaut, le vecteur résultat n'est pas verrouillé.
     res->memlocked = false;
 
-     // Variables intermédiaires
+    // Variables intermédiaires
     double a = 8.2;
 	double b = 5.3196*pow(10.0,-4.0)*cos(pos->x);
 	double c = -2600;
@@ -361,46 +362,60 @@ int main(int argc, char *argv[]) {
     angle = angle*2.0*3.14/360.0;
 
 
-	/* Notre code */
-
-    // TODO: Vérifier que le temps d'échantillonnage est infferieur à tau.
-
     // Affiche l'en-tête du tableau.
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
         "\tvit. ang. (°/s)\n");
 
-    double pos = 0;
-    double vit = 0;
-    // angle déja défini
-    double vitAng = 0;
-    double temps = 0;
-    double nbreElemBoucle = duree/pas;
-    vecteur *Y = malloc(sizeof(vecteur));
-    vecteur *Y_Point = malloc(sizeof(vecteur));  
-    rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
-    impLigneDonnees(temps, pos, vit, angle, vitAng);
 
-    for (int i=1;i<nbreElemBoucle;i++){
-                
+    // Initialisation simulation.
+
+    // TODO Contruction des vecteurs positions et vitesses
+    // (sous forme de pointeur)
+    double pos_s = 0;
+    double vit_s = 0;
+    // angle déja défini
+    double vitAng_s = 0;
+
+
+    double temps_s = 0;
+
+    // TODO déplacer le calcul du nombre de tour de boucle.
+    // cet emplacement n'est pas idéal.
+    double nbreElemBoucle_s = duree/pas;
+
+    // TODO Déplacer avec "construction des vecteurs ..."
+    // Ce sont cest vecteurs Y et Y_Point qui doivent être donnés en paramètres
+    // à rangeKutta.
+    vecteur *Y = malloc(sizeof(vecteur));
+    vecteur *Y_Point = malloc(sizeof(vecteur));
+
+    // TODO Je pense que ça aussi pourait être déplacé
+    // Peut-être suite au calcul du nombre de tour de boucle.
+    rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
+    impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
+
+    for (int i=1;i<nbreElemBoucle_s;i++){
+
+        // Extrait de la définition de rangeKutta.      
+        /*
+        vecteur* (*dsec)(double, vecteur *, vecteur *),
+        double time, vecteur *pos, vecteur *vit, double dt) {
+        */
+
+        // TODO Prendre comme paramètre les vecteurs Y et Y_Point.
         Y_rk4 = rangeKutta(*dSec,temps,pos,vit,pas);
         // TODO verifier type de sortie rangeKuuta vecteur versus pointeur
-        temps = temps + pas;
+        temps_s = temps_s + pas;
         Y = Y_rk4->position;
         Y_Point = Y_rk4->vitesse;
-        pos = Y->x;
-        vit = Y_Point->x;
+        pos_s = Y->x;
+        vit_s = Y_Point->x;
         angle = Y->y;
-        vitAng = Y_Point->y;
+        vitAng_s = Y_Point->y;
         
-        impLigneDonnees(temps, pos, vit, angle, vitAng);
+        impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
     }
-
-    /*
-    impLigneDonnees(0, 78798, 34567, 34567, 345);
-    impLigneDonnees(678, 6789, 56789, 5678, 6789);
-    impLigneDonnees(456, 4567, 678, 5678, 45678);
-    */
 
 	return EXIT_SUCCESS;
 }

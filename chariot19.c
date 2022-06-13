@@ -52,6 +52,7 @@ typedef struct Vecteur {
     double x;
     double y;
     double z;
+    bool memlocked;
 } vecteur;
 
 
@@ -83,12 +84,18 @@ vecteur *vectSum(const vecteur * ftm, ...) {
     res->x = 0;
     res->y = 0;
     res->z = 0;
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
 
     // Calcul de la somme.
     while (ftm != NULL) {
         res->x += ftm->x;
         res->y += ftm->y;
         res->z += ftm->z;
+
+        // Si le vecteur n'est pas verrouillé, on le libère.
+        if (!(ftm->memlocked)) free(ftm);
+
         ftm = va_arg(ap, vecteur *);
     }
 
@@ -110,6 +117,12 @@ vecteur *vectScalar(vecteur *v, double s) {
     res->x = v->x * s;
     res->y = v->y * s;
     res->z = v->z * s;
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
+
+    // Si le vecteur n'est pas verrouillé, on le libère.
+    if (!(v->memlocked)) free(v);
+
     return res;
 };
 
@@ -134,9 +147,9 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  * @brief Calcul la dérivée seconde.
  *
  * @param time Temps écoulé depuis le début de la simulation.
- * @param *pos Pointeur vers vecteur position.
- * @param *vit Pointeur vers vecteur vitesse.
- * @return Le vecteur dérivée seconde.
+ * @param pos Pointeur vers vecteur position.
+ * @param vit Pointeur vers vecteur vitesse.
+ * @return Pointeur vers le vecteur dérivée seconde.
  */
 vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 
@@ -152,6 +165,8 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 	
 	// équations de notre système    
     vecteur *res = malloc(sizeof(vecteur));
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
 
 	res->x = // dérivée seconde de x 
         (g1-vit->x*(c*e/a)
@@ -164,6 +179,10 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 		+vit->y*h
 		-pow(vit->y,2)*(d*f/b))
 		/(e-a*f/b);
+    
+    // Libération des vecteurs paramètres si non verrouillés.
+    if (!(pos->memlocked)) free(pos);
+    if (!(vit->memlocked)) free(vit);
 
     return res;
 }
@@ -183,22 +202,27 @@ rk4_result *rangeKutta(
 
     // Valeurs intermédiaires.
     vecteur *Ka = dSec(time, pos, vit);
+    // Ka est utilisée plusieurs fois, on le verrouille.
+    Ka->memlocked = true;
     
     vecteur *Kb = dSec(
         time + dt/2.0, 
         vectSum(pos, vectScalar(vit, dt/2.0), NULL),
         vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
+    Kb->memlocked = true;
     
     vecteur *Kc = dSec(
         time + dt/2.0,
         vectSum(pos, vectScalar(vit, dt/2.0), 
             vectScalar(Ka, dt*dt/4.0), NULL),
         vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
+    Kc->memlocked = true;
     
     vecteur *Kd = dSec(
         time + dt,
         vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
         vectSum(vit, vectScalar(Kc, dt), NULL));
+    Kd->memlocked = true;
     
     rk4_result *res = malloc(sizeof(rk4_result));
 
@@ -218,6 +242,12 @@ rk4_result *rangeKutta(
         vectScalar(Kc, dt/3.0),
         vectScalar(Kd, dt/6.0),
         NULL);
+    
+    // Libération des variables intermédiaires.
+    free(Ka);
+    free(Kb);
+    free(Kc);
+    free(Kd);
     
     return res;
 }

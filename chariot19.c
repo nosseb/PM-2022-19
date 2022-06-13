@@ -273,13 +273,13 @@ int main(int argc, char *argv[]) {
     // Affiche l'en-tête du tableau.
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
         "\tvit. ang. (°/s)\n");
-        
-    float pos = 0;
-    float vit = 0;
+
+    double pos = 0;
+    double vit = 0;
     // angle déja défini
-    float vitAng = 0;
-    float temps = 0;
-    float nbreElemBoucle = duree/pas;
+    double vitAng = 0;
+    double temps = 0;
+    double nbreElemBoucle = duree/pas;
     vecteur *Y = malloc(sizeof(vecteur));
     vecteur *Y_Point = malloc(sizeof(vecteur));  
     rk4_result *Y_rk4 = malloc(sizeof(rk4_result));

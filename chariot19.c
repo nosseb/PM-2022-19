@@ -187,9 +187,9 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 
 // TODO changer type appel
 rk4_result *rangeKutta(
-    void (*dsec)(vecteur *, vecteur *, double),
+    vecteur * (*dsec)(vecteur *, vecteur *, double),
     double time, vecteur *pos, vecteur *vit, double dt) {
-
+    
     // Valeurs intermédiaires.
     vecteur *Ka = dSec(time, pos, vit);
     
@@ -257,7 +257,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* Récupération des valeurs numériques des arguments par atof() */
-    double pas      = atof(argv[1]); // (s)
+    double pas      = atof(argv[1]); // (s) // float ????
     double duree    = atof(argv[2]); // (s)
     double angle    = atof(argv[3]); // (deg)
     // conversion edeg -> rad.
@@ -273,6 +273,33 @@ int main(int argc, char *argv[]) {
     // Affiche l'en-tête du tableau.
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
         "\tvit. ang. (°/s)\n");
+        
+    float pos = 0;
+    float vit = 0;
+    // angle déja défini
+    float vitAng = 0;
+    float temps = 0;
+    float nbreElemBoucle = duree/pas;
+    vecteur *Y = malloc(sizeof(vecteur));
+    vecteur *Y_Point = malloc(sizeof(vecteur));  
+    rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
+    impLigneDonnées(temps, pos, vit, angle, vitAng);
+
+    for (int i=1;i<nbreElemBoucle;i++){
+                
+        Y_rk4 = rangeKutta(*dSec,temps,pos,vit,pas);
+        // TODO verifier type de sortie rangeKuuta vecteur versus pointeur
+        temps = temps + pas;
+        Y = Y_rk4->position;
+        Y_Point = Y_rk4->vitesse;
+        pos = Y->x;
+        vit = Y_Point->x;
+        angle = Y->y;
+        vitAng = Y_Point->y;
+        
+        impLigneDonnées(temps, pos, vit, angle, vitAng);
+
+    }
 
     /*
     impLigneDonnées(0, 78798, 34567, 34567, 345);

@@ -241,7 +241,6 @@ rk4_result *rangeKutta(
     rk4_result *res = malloc(sizeof(rk4_result));
 
     // Calcul de la position et de la vitesse.
-    // TODO: check si les deux termes sont inversés.
     res->position = *vectSum(
         pos, 
         vectScalar(vit, dt), 

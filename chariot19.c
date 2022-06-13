@@ -116,18 +116,25 @@ vecteur *vectSum(vecteur * ftm, ...) {
 
 /**
  * @brief Calcul le produit entre un scalar et un vecteur.
+ * Dans le cas ou le vecteur paramètre n'est pas marqué comme "memlocked", il 
+ * est supprimé.
+ * Le résultat n'est pas marqué comme "memlocked".
  *
- * @param v1 Vecteur.
- * @param s Scalar.
+ * @param v Pointeur vers un vecteur.
+ * @param s Scalaire.
+ * @return Pointeur vers vecteur résultat du produit.
  */
 vecteur *vectScalar(vecteur *v, double s) {
+    // Initialisation du résultat.
     vecteur *res = malloc(sizeof(vecteur));
-    res->x = v->x * s;
-    res->y = v->y * s;
     // Par défaut, le vecteur résultat n'est pas verrouillé.
     res->memlocked = false;
 
-    // Si le vecteur n'est pas verrouillé, on le libère.
+    // Calcul du produit.
+    res->x = v->x * s;
+    res->y = v->y * s;
+
+    // Si le vecteur paramètre n'est pas verrouillé, on le libère.
     if (!(v->memlocked)) free(v);
 
     return res;

@@ -192,19 +192,19 @@ rk4_result *rangeKutta(
     vecteur *Ka = dSec(time, pos, vit);
     
     vecteur *Kb = dSec(
-        time + dt / 2.0, 
+        time + dt/2.0, 
         vectSum(pos, vectScalar(vit, dt/2.0), NULL),
         vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
     
     vecteur *Kc = dSec(
-        time + dt / 2.0,
+        time + dt/2.0,
         vectSum(pos, vectScalar(vit, dt/2.0), 
             vectScalar(Ka, dt*dt/4.0), NULL),
         vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
     
     vecteur *Kd = dSec(
         time + dt,
-        vectSum(pos, vectScalar(vit, dt), vectScalar(Kc, dt/2.0), NULL),
+        vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
         vectSum(vit, vectScalar(Kc, dt), NULL));
     
     rk4_result *res = malloc(sizeof(rk4_result));

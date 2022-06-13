@@ -5,7 +5,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+
 #include "debug.h"
+
+
+
 
 	/********************************************************************
 	 *
@@ -15,7 +19,15 @@
 	 ********************************************************************/
 
 
-/* Configuration */
+
+
+
+/*******************************************************************
+ *                                                                 *
+ *                          Configuration                          *
+ *                                                                 *
+ *******************************************************************/
+
 
 #define L_BRAS      1.50000 // m
 #define D_BRAS      0.03000 // m
@@ -45,13 +57,21 @@
 #define I_BRAS      M_BRAS * (R_BRAS * R_BRAS + L_BRAS * L_BRAS / 3.0) / 4.0
 
 
+
+/*******************************************************************
+ *                                                                 *
+ *                      Structures de données                      *
+ *                                                                 *
+ *******************************************************************/
+
+
 /**
- * Une structure pour représenter un vecteur de taille 3.
+ * Une structure pour représenter un vecteur de taille 2.
  */
 typedef struct Vecteur {
     double x;
     double y;
-    double z;
+    bool memlocked;
 } vecteur;
 
 
@@ -65,30 +85,53 @@ typedef struct RK4Result {
 } rk4_result;
 
 
+
+/*******************************************************************
+ *                                                                 *
+ *                          Fonctions maths                        *
+ *                                                                 *
+ *******************************************************************/
+
+
 /**
  * @brief Calcul la somme de vecteurs.
+ * Prend en paramètre un nombre variable de vecteurs (1 minimum) et calcule
+ * leur somme.
+ * Tout vecteur n'aitant pas marqué comme "memlocked" est supprimé de la 
+ * mémoire.
+ * Le résultat n'est pas marqué comme "memlocked".
  *
- * @param v1 Pointeur vers le premier vecteur.
- * @param v2 Pointeur vers le deuxième vecteur.
- * @param NULL Indicateuur de fin de liste.
- * @return vecteur résultat de la somme.
+ * @param ftm Pointeur vers le premier vecteur.
+ * @return Pointeur vers vecteur résultat de la somme.
  */
-vecteur *vectSum(const vecteur * ftm, ...) {
-    // Initialisation nb de paramètres variable.
+vecteur *vectSum(vecteur * ftm, ...) {
+    // ftm est le dernier paramètre dont on connais l'adresse.
+    // Il est utilisé pour récupérer la liste des autres paramètres.
+    // Le ... représente la liste variable d'arguments.
+
+    // Initialisation liste de paramètres variable.
     va_list ap;
-    va_start(ap, ftm);
+    va_start(ap, ftm); // On indique l'adresse du dernier paramètre.
 
     // Initialisation du résultat.
     vecteur *res = malloc(sizeof(vecteur));
     res->x = 0;
     res->y = 0;
-    res->z = 0;
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
 
     // Calcul de la somme.
+    // Lors de la première itération, ftm est le premier paramètre, donnée de
+    // manière explicite. Dans les itérations suivantes, ftm est récupéré via
+    // la va_arg.
     while (ftm != NULL) {
         res->x += ftm->x;
         res->y += ftm->y;
-        res->z += ftm->z;
+
+        // Si le vecteur n'est pas verrouillé, on le libère.
+        if (!(ftm->memlocked)) free(ftm);
+
+        // On récupère le prochain paramètre.
         ftm = va_arg(ap, vecteur *);
     }
 
@@ -101,17 +144,102 @@ vecteur *vectSum(const vecteur * ftm, ...) {
 
 /**
  * @brief Calcul le produit entre un scalar et un vecteur.
+ * Dans le cas ou le vecteur paramètre n'est pas marqué comme "memlocked", il 
+ * est supprimé.
+ * Le résultat n'est pas marqué comme "memlocked".
  *
- * @param v1 Vecteur.
- * @param s Scalar.
+ * @param v Pointeur vers un vecteur.
+ * @param s Scalaire.
+ * @return Pointeur vers vecteur résultat du produit.
  */
 vecteur *vectScalar(vecteur *v, double s) {
+    // Initialisation du résultat.
     vecteur *res = malloc(sizeof(vecteur));
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
+
+    // Calcul du produit.
     res->x = v->x * s;
     res->y = v->y * s;
-    res->z = v->z * s;
+
+    // Si le vecteur paramètre n'est pas verrouillé, on le libère.
+    if (!(v->memlocked)) free(v);
+
     return res;
 };
+
+
+/**
+ * @brief Exécute une itération de la méthode de Runge-Kutta de 4e ordre.
+ *
+ * @param dsec Pointeur vers la fonction à utiliser pour la dérivée seconde.
+ * @param time Temps écoulé depuis le début de la simulation.
+ * @param pos Pointeur vers le vecteur position.
+ * @param vit Pointeur vers le vecteur vitesse.
+ * @param dt Temps écoulé entre deux itérations.
+ * @return Pointeur vers le résultat de la méthode de Runge-Kutta.
+ */
+rk4_result *rangeKutta(
+    vecteur* (*dsec)(double, vecteur *, vecteur *),
+    double time, vecteur *pos, vecteur *vit, double dt) {
+    // Initialisation du résultat.
+    rk4_result *res = malloc(sizeof(rk4_result));
+
+    // Valeurs intermédiaires.
+    // On vérrouille les vecteurs car ils sont utilisés plusieurs fois.
+    vecteur *Ka = dsec(time, pos, vit);
+    Ka->memlocked = true;
+    
+    vecteur *Kb = dsec(
+        time + dt/2.0, 
+        vectSum(pos, vectScalar(vit, dt/2.0), NULL),
+        vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
+    Kb->memlocked = true;
+    
+    vecteur *Kc = dsec(
+        time + dt/2.0,
+        vectSum(pos, vectScalar(vit, dt/2.0), 
+            vectScalar(Ka, dt*dt/4.0), NULL),
+        vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
+    Kc->memlocked = true;
+    
+    vecteur *Kd = dsec(
+        time + dt,
+        vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
+        vectSum(vit, vectScalar(Kc, dt), NULL));
+    Kd->memlocked = true;
+
+    // Calcul de la position et de la vitesse.
+    res->position = *vectSum(
+        pos, 
+        vectScalar(vit, dt), 
+        vectScalar(Ka, dt*dt/6.0),
+        vectScalar(Kb, dt*dt/6.0),
+        vectScalar(Kc, dt*dt/6.0),
+        NULL);
+    res->vitesse = *vectSum(
+        vit,
+        vectScalar(Ka, dt/6.0),
+        vectScalar(Kb, dt/3.0),
+        vectScalar(Kc, dt/3.0),
+        vectScalar(Kd, dt/6.0),
+        NULL);
+    
+    // Libération des variables intermédiaires.
+    free(Ka);
+    free(Kb);
+    free(Kc);
+    free(Kd);
+    
+    return res;
+}
+
+
+/*******************************************************************
+ *                                                                 *
+ *                           Fonctions UX                          *
+ *                                                                 *
+ *******************************************************************/
 
 
 /**
@@ -137,99 +265,68 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
 }
 
 
+
+/*******************************************************************
+ *                                                                 *
+ *                         Fonctions modèle                        *
+ *                                                                 *
+ *******************************************************************/
+
+
 /**
  * @brief Calcul la dérivée seconde.
  *
  * @param time Temps écoulé depuis le début de la simulation.
- * @param *pos Pointeur vers vecteur position.
- * @param *vit Pointeur vers vecteur vitesse.
- * @return Le vecteur dérivée seconde.
+ * @param pos Pointeur vers vecteur position.
+ * @param vit Pointeur vers vecteur vitesse.
+ * @return Pointeur vers le vecteur dérivée seconde.
  */
 vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
+    // Initialisation du résultat.
+    vecteur *res = malloc(sizeof(vecteur));
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
 
      // Variables intermédiaires
-    float a = 8.2;
-	float b = 5.3196*pow(10,-4)*cos(pos->x);
-	float c = -2600; // valeur à vérifier : semble très grande
-	float d = 5.3196*pow(10,-4)*sin(pos->x);
-	float e = 5.3196*pow(10,-4)*cos(pos->x);
-	float f = 4.865000054;
-	float g1= -5.2185276*pow(10,-3)*sin(pos->x);
-	float h = -0.09;
+    double a = 8.2;
+	double b = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+	double c = -2600;
+	double d = 5.3196*pow(10.0,-4.0)*sin(pos->x);
+	double e = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+	double f = 4.865000054;
+	double g1= -5.2185276*pow(10.0,-3.0)*sin(pos->x);
+	double h = -0.09;
 	
-	// équations de notre système    
-    vecteur *res = malloc(sizeof(vecteur));
+	// équations de notre système
 
-	res->x = // dérivée seconde de x 
+    // Dérivée seconde de la position.
+	res->x =
         (g1-vit->x*(c*e/a)
 		+vit->y*h
-		-pow(vit->y,2)*(d*e/a))
+		-pow(vit->y,2.0)*(d*e/a))
 		/(f-b*e/a);
 
-	res->y = // dérivée seconde de y
+    // Dérivée seconde de l'angle.
+	res->y =
         (g1-vit->x*(c*f/b) 
 		+vit->y*h
-		-pow(vit->y,2)*(d*f/b))
+		-pow(vit->y,2.0)*(d*f/b))
 		/(e-a*f/b);
+    
+    // Libération des vecteurs paramètres si non verrouillés.
+    if (!(pos->memlocked)) free(pos);
+    if (!(vit->memlocked)) free(vit);
 
     return res;
 }
 
-/**
- * @brief Exécute la méthode de Runge-Kutta de 4e ordre.
- *
- * @param *dsec Fonction à utiliser pour calculer la dérivée seconde.
- * @param time Temps écoulé depuis le début de la simulation.
- * @param *pos Pointeur vers le vecteur position.
- * @param *vit Pointeur vers le vecteur vitesse.
- * @param dt Temps écoulé entre deux itérations.
- */
 
-// TODO changer type appel
-rk4_result *rangeKutta(
-    vecteur * (*dsec)(vecteur *, vecteur *, double),
-    double time, vecteur *pos, vecteur *vit, double dt) {
-    
-    // Valeurs intermédiaires.
-    vecteur *Ka = dSec(time, pos, vit);
-    
-    vecteur *Kb = dSec(
-        time + dt/2.0, 
-        vectSum(pos, vectScalar(vit, dt/2.0), NULL),
-        vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
-    
-    vecteur *Kc = dSec(
-        time + dt/2.0,
-        vectSum(pos, vectScalar(vit, dt/2.0), 
-            vectScalar(Ka, dt*dt/4.0), NULL),
-        vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
-    
-    vecteur *Kd = dSec(
-        time + dt,
-        vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
-        vectSum(vit, vectScalar(Kc, dt), NULL));
-    
-    rk4_result *res = malloc(sizeof(rk4_result));
 
-    // Calcul de la position et de la vitesse.
-    // TODO: check si les deux termes sont inversés.
-    res->position = *vectSum(
-        pos, 
-        vectScalar(vit, dt), 
-        vectScalar(Ka, dt*dt/6.0),
-        vectScalar(Kb, dt*dt/6.0),
-        vectScalar(Kc, dt*dt/6.0),
-        NULL);
-    res->vitesse = *vectSum(
-        vit,
-        vectScalar(Ka, dt/6.0),
-        vectScalar(Kb, dt/3.0),
-        vectScalar(Kc, dt/3.0),
-        vectScalar(Kd, dt/6.0),
-        NULL);
-    
-    return res;
-}
+/*******************************************************************
+ *                                                                 *
+ *                       Programme principal                       *
+ *                                                                 *
+ *******************************************************************/
 
 
 /**

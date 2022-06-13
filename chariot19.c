@@ -197,7 +197,7 @@ rk4_result *rangeKutta(
     
     vecteur *Kd = dSec(
         time + dt,
-        vectSum(pos, vectScalar(vit, dt), vectScalar(Kc, dt/2.0), NULL),
+        vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
         vectSum(vit, vectScalar(Kc, dt), NULL));
     
     rk4_result *res = malloc(sizeof(rk4_result));

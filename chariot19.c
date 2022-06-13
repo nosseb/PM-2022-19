@@ -354,16 +354,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* Récupération des valeurs numériques des arguments par atof() */
-    double pas      = atof(argv[1]); // (s)
+    double pas      = atof(argv[1]); // (s) // float ????
     double duree    = atof(argv[2]); // (s)
     double angle    = atof(argv[3]); // (deg)
     // conversion edeg -> rad.
     angle = angle*2.0*3.14/360.0;
 
 
-	/* Votre code */
-
-    // TODO: Calculer le moment d'inertie (variable statique).
+	/* Notre code */
 
     // TODO: Vérifier que le temps d'échantillonnage est infferieur à tau.
 
@@ -371,10 +369,37 @@ int main(int argc, char *argv[]) {
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
         "\tvit. ang. (°/s)\n");
 
+    double pos = 0;
+    double vit = 0;
+    // angle déja défini
+    double vitAng = 0;
+    double temps = 0;
+    double nbreElemBoucle = duree/pas;
+    vecteur *Y = malloc(sizeof(vecteur));
+    vecteur *Y_Point = malloc(sizeof(vecteur));  
+    rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
+    impLigneDonnees(temps, pos, vit, angle, vitAng);
+
+    for (int i=1;i<nbreElemBoucle;i++){
+                
+        Y_rk4 = rangeKutta(*dSec,temps,pos,vit,pas);
+        // TODO verifier type de sortie rangeKuuta vecteur versus pointeur
+        temps = temps + pas;
+        Y = Y_rk4->position;
+        Y_Point = Y_rk4->vitesse;
+        pos = Y->x;
+        vit = Y_Point->x;
+        angle = Y->y;
+        vitAng = Y_Point->y;
+        
+        impLigneDonnees(temps, pos, vit, angle, vitAng);
+
+    }
+
     /*
-    impLigneDonnées(0, 78798, 34567, 34567, 345);
-    impLigneDonnées(678, 6789, 56789, 5678, 6789);
-    impLigneDonnées(456, 4567, 678, 5678, 45678);
+    impLigneDonnees(0, 78798, 34567, 34567, 345);
+    impLigneDonnees(678, 6789, 56789, 5678, 6789);
+    impLigneDonnees(456, 4567, 678, 5678, 45678);
     */
 
 	return EXIT_SUCCESS;

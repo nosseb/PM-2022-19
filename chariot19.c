@@ -173,6 +173,10 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  * @return Pointeur vers le vecteur dérivée seconde.
  */
 vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
+    // Initialisation du résultat.
+    vecteur *res = malloc(sizeof(vecteur));
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
 
      // Variables intermédiaires
     double a = 8.2;
@@ -184,10 +188,7 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 	double g1= -5.2185276*pow(10.0,-3.0)*sin(pos->x);
 	double h = -0.09;
 	
-	// équations de notre système    
-    vecteur *res = malloc(sizeof(vecteur));
-    // Par défaut, le vecteur résultat n'est pas verrouillé.
-    res->memlocked = false;
+	// équations de notre système
 
 	res->x = // dérivée seconde de x 
         (g1-vit->x*(c*e/a)

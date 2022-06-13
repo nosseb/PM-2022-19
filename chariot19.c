@@ -184,6 +184,8 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
  * @param *vit Pointeur vers le vecteur vitesse.
  * @param dt Temps écoulé entre deux itérations.
  */
+
+// TODO changer type appel
 rk4_result *rangeKutta(
     void (*dsec)(vecteur *, vecteur *, double),
     double time, vecteur *pos, vecteur *vit, double dt) {

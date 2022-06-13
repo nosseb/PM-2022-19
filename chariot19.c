@@ -67,16 +67,23 @@ typedef struct RK4Result {
 
 /**
  * @brief Calcul la somme de vecteurs.
+ * Prend en paramètre un nombre variable de vecteurs (1 minimum) et calcule
+ * leur somme.
+ * Tout vecteur n'aitant pas marqué comme "memlocked" est supprimé de la 
+ * mémoire.
+ * Le résultat n'est pas marqué comme "memlocked".
  *
- * @param v1 Pointeur vers le premier vecteur.
- * @param v2 Pointeur vers le deuxième vecteur.
- * @param NULL Indicateuur de fin de liste.
- * @return vecteur résultat de la somme.
+ * @param ftm Pointeur vers le premier vecteur.
+ * @return Pointeur vers vecteur résultat de la somme.
  */
-vecteur *vectSum(const vecteur * ftm, ...) {
-    // Initialisation nb de paramètres variable.
+vecteur *vectSum(vecteur * ftm, ...) {
+    // ftm est le dernier paramètre dont on connais l'adresse.
+    // Il est utilisé pour récupérer la liste des autres paramètres.
+    // Le ... représente la liste variable d'arguments.
+
+    // Initialisation liste de paramètres variable.
     va_list ap;
-    va_start(ap, ftm);
+    va_start(ap, ftm); // On indique l'adresse du dernier paramètre.
 
     // Initialisation du résultat.
     vecteur *res = malloc(sizeof(vecteur));
@@ -86,6 +93,9 @@ vecteur *vectSum(const vecteur * ftm, ...) {
     res->memlocked = false;
 
     // Calcul de la somme.
+    // Lors de la première itération, ftm est le premier paramètre, donnée de
+    // manière explicite. Dans les itérations suivantes, ftm est récupéré via
+    // la va_arg.
     while (ftm != NULL) {
         res->x += ftm->x;
         res->y += ftm->y;
@@ -93,6 +103,7 @@ vecteur *vectSum(const vecteur * ftm, ...) {
         // Si le vecteur n'est pas verrouillé, on le libère.
         if (!(ftm->memlocked)) free(ftm);
 
+        // On récupère le prochain paramètre.
         ftm = va_arg(ap, vecteur *);
     }
 

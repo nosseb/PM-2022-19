@@ -366,45 +366,46 @@ int main(int argc, char *argv[]) {
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
         "\tvit. ang. (°/s)\n");
 
+    double nbreElemBoucle_s = duree/pas;
 
     // Initialisation simulation.
 
-    // TODO Contruction des vecteurs positions et vitesses
-    // (sous forme de pointeur)
-    double pos_s = 0;
-    double vit_s = 0;
-    // angle déja défini
-    double vitAng_s = 0;
-
-
-    double temps_s = 0;
-
-    // TODO déplacer le calcul du nombre de tour de boucle.
-    // cet emplacement n'est pas idéal.
-    double nbreElemBoucle_s = duree/pas;
-
-    // TODO Déplacer avec "construction des vecteurs ..."
-    // Ce sont cest vecteurs Y et Y_Point qui doivent être donnés en paramètres
-    // à rangeKutta.
+    vecteur *pos_v = malloc(sizeof(vecteur));
+    vecteur *vit_v = malloc(sizeof(vecteur));
     vecteur *Y = malloc(sizeof(vecteur));
     vecteur *Y_Point = malloc(sizeof(vecteur));
-
+    vecteur *Y_Point_Point = malloc(sizeof(vecteur));
+    rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
+    
+    // TODO Contruction des vecteurs positions et vitesses
+    // (sous forme de pointeur)
+    double pos_s = 0; // on part de x=zero
+    double vit_s = 0; // vitesse initale nulle
+    // angle déja défini
+    double vitAng_s = 0; 
+    double temps_s = 0;
+    
+    
+    // Ce sont cest vecteurs Y et Y_Point qui doivent être donnés en paramètres
+    // à rangeKutta. WHAAAAAAATTTTTT ??
+    
     // TODO Je pense que ça aussi pourait être déplacé
     // Peut-être suite au calcul du nombre de tour de boucle.
-    rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
+
     impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
     for (int i=1;i<nbreElemBoucle_s;i++){
-
-        // Extrait de la définition de rangeKutta.      
-        /*
-        vecteur* (*dsec)(double, vecteur *, vecteur *),
-        double time, vecteur *pos, vecteur *vit, double dt) {
-        */
-
+        
         // TODO Prendre comme paramètre les vecteurs Y et Y_Point.
-        Y_rk4 = rangeKutta(*dSec,temps,pos,vit,pas);
-        // TODO verifier type de sortie rangeKuuta vecteur versus pointeur
+
+        // ancien ligne : 
+        //Y_rk4 = rangeKutta(*dSec,temps_s,pos_v,vit_v,pas);
+
+        // Y_point_point = ....
+        
+        Y_rk4 = rangeKutta(Y_Point_Point,temps_s,pos_v,vit_v,pas);
+        // TODO verifier type de sortie rangeKutta vecteur versus pointeur
+
         temps_s = temps_s + pas;
         Y = Y_rk4->position;
         Y_Point = Y_rk4->vitesse;

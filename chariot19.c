@@ -264,9 +264,7 @@ int main(int argc, char *argv[]) {
     angle = angle*2.0*3.14/360.0;
 
 
-	/* Votre code */
-
-    // TODO: Calculer le moment d'inertie (variable statique).
+	/* Notre code */
 
     // TODO: Vérifier que le temps d'échantillonnage est infferieur à tau.
 

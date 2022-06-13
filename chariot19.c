@@ -5,7 +5,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+
 #include "debug.h"
+
+
+
 
 	/********************************************************************
 	 *
@@ -15,7 +19,15 @@
 	 ********************************************************************/
 
 
-/* Configuration */
+
+
+
+/*******************************************************************
+ *                                                                 *
+ *                          Configuration                          *
+ *                                                                 *
+ *******************************************************************/
+
 
 #define L_BRAS      1.50000 // m
 #define D_BRAS      0.03000 // m
@@ -45,6 +57,14 @@
 #define I_BRAS      M_BRAS * (R_BRAS * R_BRAS + L_BRAS * L_BRAS / 3.0) / 4.0
 
 
+
+/*******************************************************************
+ *                                                                 *
+ *                      Structures de données                      *
+ *                                                                 *
+ *******************************************************************/
+
+
 /**
  * Une structure pour représenter un vecteur de taille 2.
  */
@@ -63,6 +83,14 @@ typedef struct RK4Result {
     vecteur position;
     vecteur vitesse;
 } rk4_result;
+
+
+
+/*******************************************************************
+ *                                                                 *
+ *                          Fonctions maths                        *
+ *                                                                 *
+ *******************************************************************/
 
 
 /**
@@ -141,6 +169,15 @@ vecteur *vectScalar(vecteur *v, double s) {
 };
 
 
+
+
+/*******************************************************************
+ *                                                                 *
+ *                           Fonctions UX                          *
+ *                                                                 *
+ *******************************************************************/
+
+
 /**
  * @brief Affichage des valeurs formattées.
  * Inclus les convertions d'unités.
@@ -163,6 +200,13 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
 }
 
+
+
+/*******************************************************************
+ *                                                                 *
+ *                         Fonctions modèle                        *
+ *                                                                 *
+ *******************************************************************/
 
 /**
  * @brief Calcul la dérivée seconde.

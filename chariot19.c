@@ -46,12 +46,11 @@
 
 
 /**
- * Une structure pour représenter un vecteur de taille 3.
+ * Une structure pour représenter un vecteur de taille 2.
  */
 typedef struct Vecteur {
     double x;
     double y;
-    double z;
     bool memlocked;
 } vecteur;
 
@@ -83,7 +82,6 @@ vecteur *vectSum(const vecteur * ftm, ...) {
     vecteur *res = malloc(sizeof(vecteur));
     res->x = 0;
     res->y = 0;
-    res->z = 0;
     // Par défaut, le vecteur résultat n'est pas verrouillé.
     res->memlocked = false;
 
@@ -91,7 +89,6 @@ vecteur *vectSum(const vecteur * ftm, ...) {
     while (ftm != NULL) {
         res->x += ftm->x;
         res->y += ftm->y;
-        res->z += ftm->z;
 
         // Si le vecteur n'est pas verrouillé, on le libère.
         if (!(ftm->memlocked)) free(ftm);
@@ -116,7 +113,6 @@ vecteur *vectScalar(vecteur *v, double s) {
     vecteur *res = malloc(sizeof(vecteur));
     res->x = v->x * s;
     res->y = v->y * s;
-    res->z = v->z * s;
     // Par défaut, le vecteur résultat n'est pas verrouillé.
     res->memlocked = false;
 

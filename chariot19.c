@@ -281,7 +281,7 @@ int main(int argc, char *argv[]) {
     vecteur *Y = malloc(sizeof(vecteur));
     vecteur *Y_Point = malloc(sizeof(vecteur));  
     rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
-    impLigneDonnées(temps, pos, vit, angle, vitAng);
+    impLigneDonnees(temps, pos, vit, angle, vitAng);
 
     for (int i=1;i<nbreElemBoucle;i++){
                 
@@ -295,14 +295,14 @@ int main(int argc, char *argv[]) {
         angle = Y->y;
         vitAng = Y_Point->y;
         
-        impLigneDonnées(temps, pos, vit, angle, vitAng);
+        impLigneDonnees(temps, pos, vit, angle, vitAng);
 
     }
 
     /*
-    impLigneDonnées(0, 78798, 34567, 34567, 345);
-    impLigneDonnées(678, 6789, 56789, 5678, 6789);
-    impLigneDonnées(456, 4567, 678, 5678, 45678);
+    impLigneDonnees(0, 78798, 34567, 34567, 345);
+    impLigneDonnees(678, 6789, 56789, 5678, 6789);
+    impLigneDonnees(456, 4567, 678, 5678, 45678);
     */
 
 	return EXIT_SUCCESS;

@@ -175,14 +175,14 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
 vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 
      // Variables intermédiaires
-    float a = 8.2;
-	float b = 5.3196*pow(10,-4)*cos(pos->x);
-	float c = -2600; // valeur à vérifier : semble très grande
-	float d = 5.3196*pow(10,-4)*sin(pos->x);
-	float e = 5.3196*pow(10,-4)*cos(pos->x);
-	float f = 4.865000054;
-	float g1= -5.2185276*pow(10,-3)*sin(pos->x);
-	float h = -0.09;
+    double a = 8.2;
+	double b = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+	double c = -2600;
+	double d = 5.3196*pow(10.0,-4.0)*sin(pos->x);
+	double e = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+	double f = 4.865000054;
+	double g1= -5.2185276*pow(10.0,-3.0)*sin(pos->x);
+	double h = -0.09;
 	
 	// équations de notre système    
     vecteur *res = malloc(sizeof(vecteur));

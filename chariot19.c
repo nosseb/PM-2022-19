@@ -211,40 +211,39 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
     return res;
 }
 
+
 /**
  * @brief Exécute la méthode de Runge-Kutta de 4e ordre.
  *
- * @param *dsec Fonction à utiliser pour calculer la dérivée seconde.
+ * @param dsec Pointeur vers la fonction à utiliser pour la dérivée seconde.
  * @param time Temps écoulé depuis le début de la simulation.
- * @param *pos Pointeur vers le vecteur position.
- * @param *vit Pointeur vers le vecteur vitesse.
+ * @param pos Pointeur vers le vecteur position.
+ * @param vit Pointeur vers le vecteur vitesse.
  * @param dt Temps écoulé entre deux itérations.
  */
-
-// TODO changer type appel
 rk4_result *rangeKutta(
-    void (*dsec)(vecteur *, vecteur *, double),
+    vecteur* (*dsec)(double, vecteur *, vecteur *),
     double time, vecteur *pos, vecteur *vit, double dt) {
 
     // Valeurs intermédiaires.
-    vecteur *Ka = dSec(time, pos, vit);
+    vecteur *Ka = dsec(time, pos, vit);
     // Ka est utilisée plusieurs fois, on le verrouille.
     Ka->memlocked = true;
     
-    vecteur *Kb = dSec(
+    vecteur *Kb = dsec(
         time + dt/2.0, 
         vectSum(pos, vectScalar(vit, dt/2.0), NULL),
         vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
     Kb->memlocked = true;
     
-    vecteur *Kc = dSec(
+    vecteur *Kc = dsec(
         time + dt/2.0,
         vectSum(pos, vectScalar(vit, dt/2.0), 
             vectScalar(Ka, dt*dt/4.0), NULL),
         vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
     Kc->memlocked = true;
     
-    vecteur *Kd = dSec(
+    vecteur *Kd = dsec(
         time + dt,
         vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
         vectSum(vit, vectScalar(Kc, dt), NULL));

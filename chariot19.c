@@ -169,6 +169,70 @@ vecteur *vectScalar(vecteur *v, double s) {
 };
 
 
+/**
+ * @brief Exécute une itération de la méthode de Runge-Kutta de 4e ordre.
+ *
+ * @param dsec Pointeur vers la fonction à utiliser pour la dérivée seconde.
+ * @param time Temps écoulé depuis le début de la simulation.
+ * @param pos Pointeur vers le vecteur position.
+ * @param vit Pointeur vers le vecteur vitesse.
+ * @param dt Temps écoulé entre deux itérations.
+ * @return Pointeur vers le résultat de la méthode de Runge-Kutta.
+ */
+rk4_result *rangeKutta(
+    vecteur* (*dsec)(double, vecteur *, vecteur *),
+    double time, vecteur *pos, vecteur *vit, double dt) {
+    // Initialisation du résultat.
+    rk4_result *res = malloc(sizeof(rk4_result));
+
+    // Valeurs intermédiaires.
+    // On vérrouille les vecteurs car ils sont utilisés plusieurs fois.
+    vecteur *Ka = dsec(time, pos, vit);
+    Ka->memlocked = true;
+    
+    vecteur *Kb = dsec(
+        time + dt/2.0, 
+        vectSum(pos, vectScalar(vit, dt/2.0), NULL),
+        vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
+    Kb->memlocked = true;
+    
+    vecteur *Kc = dsec(
+        time + dt/2.0,
+        vectSum(pos, vectScalar(vit, dt/2.0), 
+            vectScalar(Ka, dt*dt/4.0), NULL),
+        vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
+    Kc->memlocked = true;
+    
+    vecteur *Kd = dsec(
+        time + dt,
+        vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
+        vectSum(vit, vectScalar(Kc, dt), NULL));
+    Kd->memlocked = true;
+
+    // Calcul de la position et de la vitesse.
+    res->position = *vectSum(
+        pos, 
+        vectScalar(vit, dt), 
+        vectScalar(Ka, dt*dt/6.0),
+        vectScalar(Kb, dt*dt/6.0),
+        vectScalar(Kc, dt*dt/6.0),
+        NULL);
+    res->vitesse = *vectSum(
+        vit,
+        vectScalar(Ka, dt/6.0),
+        vectScalar(Kb, dt/3.0),
+        vectScalar(Kc, dt/3.0),
+        vectScalar(Kd, dt/6.0),
+        NULL);
+    
+    // Libération des variables intermédiaires.
+    free(Ka);
+    free(Kb);
+    free(Kc);
+    free(Kd);
+    
+    return res;
+}
 
 
 /*******************************************************************
@@ -207,6 +271,7 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  *                         Fonctions modèle                        *
  *                                                                 *
  *******************************************************************/
+
 
 /**
  * @brief Calcul la dérivée seconde.
@@ -256,69 +321,12 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 }
 
 
-/**
- * @brief Exécute la méthode de Runge-Kutta de 4e ordre.
- *
- * @param dsec Pointeur vers la fonction à utiliser pour la dérivée seconde.
- * @param time Temps écoulé depuis le début de la simulation.
- * @param pos Pointeur vers le vecteur position.
- * @param vit Pointeur vers le vecteur vitesse.
- * @param dt Temps écoulé entre deux itérations.
- */
-rk4_result *rangeKutta(
-    vecteur* (*dsec)(double, vecteur *, vecteur *),
-    double time, vecteur *pos, vecteur *vit, double dt) {
 
-    // Valeurs intermédiaires.
-    vecteur *Ka = dsec(time, pos, vit);
-    // Ka est utilisée plusieurs fois, on le verrouille.
-    Ka->memlocked = true;
-    
-    vecteur *Kb = dsec(
-        time + dt/2.0, 
-        vectSum(pos, vectScalar(vit, dt/2.0), NULL),
-        vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
-    Kb->memlocked = true;
-    
-    vecteur *Kc = dsec(
-        time + dt/2.0,
-        vectSum(pos, vectScalar(vit, dt/2.0), 
-            vectScalar(Ka, dt*dt/4.0), NULL),
-        vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
-    Kc->memlocked = true;
-    
-    vecteur *Kd = dsec(
-        time + dt,
-        vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
-        vectSum(vit, vectScalar(Kc, dt), NULL));
-    Kd->memlocked = true;
-    
-    rk4_result *res = malloc(sizeof(rk4_result));
-
-    // Calcul de la position et de la vitesse.
-    res->position = *vectSum(
-        pos, 
-        vectScalar(vit, dt), 
-        vectScalar(Ka, dt*dt/6.0),
-        vectScalar(Kb, dt*dt/6.0),
-        vectScalar(Kc, dt*dt/6.0),
-        NULL);
-    res->vitesse = *vectSum(
-        vit,
-        vectScalar(Ka, dt/6.0),
-        vectScalar(Kb, dt/3.0),
-        vectScalar(Kc, dt/3.0),
-        vectScalar(Kd, dt/6.0),
-        NULL);
-    
-    // Libération des variables intermédiaires.
-    free(Ka);
-    free(Kb);
-    free(Kc);
-    free(Kd);
-    
-    return res;
-}
+/*******************************************************************
+ *                                                                 *
+ *                       Programme principal                       *
+ *                                                                 *
+ *******************************************************************/
 
 
 /**

@@ -115,25 +115,21 @@ vecteur *vectScalar(vecteur *v, double s) {
 
 
 /**
- * @brief Affiche 5 doubles en notation scientifique séparés par des tabulations.
+ * @brief Affichage des valeurs formattées.
+ * Inclus les convertions d'unités.
  *
- * @param temps Temps écoulé depuis le début de la simulation.
- * @param pos Position du chariot sur le rail.
- * @param vit Vitesse du chariot.
- * @param angle Position angulaire du pendule.
- * @param vitAng Vitesse angulaire du pendule.
+ * @param temps Temps (s) écoulé depuis le début de la simulation.
+ * @param pos Position (m) du chariot sur le rail.
+ * @param vit Vitesse (m/s) du chariot.
+ * @param angle Position (rad) angulaire du pendule.
+ * @param vitAng Vitesse (rad/s) angulaire du pendule.
  */
 void impLigneDonnees( double temps, double pos, double vit, double angle, \
     double vitAng) {
-    // temps en secondes 
-    // pos en mètres
-    // vit en m.s^(-1)
-    // angle en radians
-    // vitAng en rad.s^(-1)
 
-    // on convertit dans les unités demandées
-    pos = pos*100; // conversion en cm
-    vit = vit*100 // conversion en cm*s^(-1)
+    // Convertion des unitées
+    pos = pos*100; // m -> cm
+    vit = vit*100; // m/s ->  cm*/s
     angle = angle*360/(2.0*3.14);
     vitAng=vitAng*360/(2.0*3.14);
     
@@ -259,10 +255,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* Récupération des valeurs numériques des arguments par atof() */
-    double pas      = atof(argv[1]); // récupère une valeur en s
-    double duree    = atof(argv[2]); // récupère une valeur en s
-    double angle    = atof(argv[3]); // récupère une valeur en degrés
-    angle = angle*2.0*3.14/360.0;    // conversion en radians
+    double pas      = atof(argv[1]); // (s)
+    double duree    = atof(argv[2]); // (s)
+    double angle    = atof(argv[3]); // (deg)
+    // conversion edeg -> rad.
+    angle = angle*2.0*3.14/360.0;
 
 
 	/* Votre code */

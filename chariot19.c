@@ -370,30 +370,33 @@ int main(int argc, char *argv[]) {
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
         "\tvit. ang. (°/s)\n");
 
-    double pos = 0;
-    double vit = 0;
+    double pos_s = 0;
+    double vit_s = 0;
     // angle déja défini
-    double vitAng = 0;
-    double temps = 0;
-    double nbreElemBoucle = duree/pas;
+    double vitAng_s = 0;
+    double temps_s = 0;
+    double nbreElemBoucle_s = duree/pas;
     vecteur *Y = malloc(sizeof(vecteur));
     vecteur *Y_Point = malloc(sizeof(vecteur));  
     rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
-    impLigneDonnees(temps, pos, vit, angle, vitAng);
+    impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
-    for (int i=1;i<nbreElemBoucle;i++){
+    for (int i=1;i<nbreElemBoucle_s;i++){
                 
+                vecteur* (*dsec)(double, vecteur *, vecteur *),
+    double time, vecteur *pos, vecteur *vit, double dt) {
+
         Y_rk4 = rangeKutta(*dSec,temps,pos,vit,pas);
         // TODO verifier type de sortie rangeKuuta vecteur versus pointeur
-        temps = temps + pas;
+        temps_s = temps_s + pas;
         Y = Y_rk4->position;
         Y_Point = Y_rk4->vitesse;
-        pos = Y->x;
-        vit = Y_Point->x;
+        pos_s = Y->x;
+        vit_s = Y_Point->x;
         angle = Y->y;
-        vitAng = Y_Point->y;
+        vitAng_s = Y_Point->y;
         
-        impLigneDonnees(temps, pos, vit, angle, vitAng);
+        impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
     }
 

@@ -125,7 +125,18 @@ vecteur *vectScalar(vecteur *v, double s) {
  */
 void impLigneDonnees( double temps, double pos, double vit, double angle, \
     double vitAng) {
+    // temps en secondes 
+    // pos en mètres
+    // vit en m.s^(-1)
+    // angle en radians
+    // vitAng en rad.s^(-1)
 
+    // on convertit dans les unités demandées
+    pos = pos*100; // conversion en cm
+    vit = vit*100 // conversion en cm*s^(-1)
+    angle = angle*360/(2.0*3.14);
+    vitAng=vitAng*360/(2.0*3.14);
+    
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
 }
 
@@ -248,9 +259,10 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* Récupération des valeurs numériques des arguments par atof() */
-    double pas      = atof(argv[1]);
-    double duree    = atof(argv[2]);
-    double angle    = atof(argv[3]);
+    double pas      = atof(argv[1]); // récupère une valeur en s
+    double duree    = atof(argv[2]); // récupère une valeur en s
+    double angle    = atof(argv[3]); // récupère une valeur en degrés
+    angle = angle*2.0*3.14/360.0;    // conversion en radians
 
 
 	/* Votre code */

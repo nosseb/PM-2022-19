@@ -368,7 +368,10 @@ int main(int argc, char *argv[]) {
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
         "\tvit. ang. (°/s)\n");
 
-    double nbreElemBoucle_s = duree/pas;
+    float nbreElemBoucle_s = duree/pas;
+    printf("debug : \n ");
+    printf("%f", nbreElemBoucle_s);
+    printf("findebug \n ");
 
     // Initialisation simulation.
 
@@ -398,7 +401,7 @@ int main(int argc, char *argv[]) {
 
     impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
-    for (int i=1;i<nbreElemBoucle_s;i++){
+    // for (int i=1;i<nbreElemBoucle_s;i++){
              
         Y_rk4 = rangeKutta(*dSec,temps_s,Y,Y_Point,pas);
         // TODO verifier type de sortie rangeKutta vecteur versus pointeur
@@ -419,7 +422,7 @@ int main(int argc, char *argv[]) {
         
         impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
-    }
+    // }
 
 	return EXIT_SUCCESS;
 }

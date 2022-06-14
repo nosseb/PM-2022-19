@@ -105,7 +105,7 @@ typedef struct RK4Result {
  * @param ftm Pointeur vers le premier vecteur.
  * @return Pointeur vers vecteur résultat de la somme.
  */
-vecteur *vectSum(vecteur * ftm, ...) {
+vecteur* vectSum(vecteur* ftm, ...) {
     // ftm est le dernier paramètre dont on connais l'adresse.
     // Il est utilisé pour récupérer la liste des autres paramètres.
     // Le ... représente la liste variable d'arguments.
@@ -115,7 +115,7 @@ vecteur *vectSum(vecteur * ftm, ...) {
     va_start(ap, ftm); // On indique l'adresse du dernier paramètre.
 
     // Initialisation du résultat.
-    vecteur *res = malloc(sizeof(vecteur));
+    vecteur* res = malloc(sizeof(vecteur));
     res->x = 0;
     res->y = 0;
     // Par défaut, le vecteur résultat n'est pas verrouillé.
@@ -133,7 +133,7 @@ vecteur *vectSum(vecteur * ftm, ...) {
         if (!(ftm->memlocked)) free(ftm);
 
         // On récupère le prochain paramètre.
-        ftm = va_arg(ap, vecteur *);
+        ftm = va_arg(ap, vecteur*);
     }
 
     // Fin nb de paramètres variable.
@@ -153,7 +153,7 @@ vecteur *vectSum(vecteur * ftm, ...) {
  * @param s Scalaire.
  * @return Pointeur vers vecteur résultat du produit.
  */
-vecteur *vectScalar(vecteur *v, double s) {
+vecteur* vectScalar(vecteur* v, double s) {
     // Initialisation du résultat.
     vecteur *res = malloc(sizeof(vecteur));
     // Par défaut, le vecteur résultat n'est pas verrouillé.
@@ -180,31 +180,31 @@ vecteur *vectScalar(vecteur *v, double s) {
  * @param dt Temps écoulé entre deux itérations.
  * @return Pointeur vers le résultat de la méthode de Runge-Kutta.
  */
-rk4_result *rangeKutta(
-    vecteur* (*dsec)(double, vecteur *, vecteur *),
-    double time, vecteur *pos, vecteur *vit, double dt) {
+rk4_result* rangeKutta(
+    vecteur* (*dsec)(double, vecteur*, vecteur*),
+    double time, vecteur* pos, vecteur* vit, double dt) {
     // Initialisation du résultat.
-    rk4_result *res = malloc(sizeof(rk4_result));
+    rk4_result* res = malloc(sizeof(rk4_result));
 
     // Valeurs intermédiaires.
     // On vérrouille les vecteurs car ils sont utilisés plusieurs fois.
-    vecteur *Ka = dsec(time, pos, vit);
+    vecteur* Ka = dsec(time, pos, vit);
     Ka->memlocked = true;
     
-    vecteur *Kb = dsec(
+    vecteur* Kb = dsec(
         time + dt/2.0, 
         vectSum(pos, vectScalar(vit, dt/2.0), NULL),
         vectSum(vit, vectScalar(Ka, dt/2.0), NULL));
     Kb->memlocked = true;
     
-    vecteur *Kc = dsec(
+    vecteur* Kc = dsec(
         time + dt/2.0,
         vectSum(pos, vectScalar(vit, dt/2.0), 
             vectScalar(Ka, dt*dt/4.0), NULL),
         vectSum(vit, vectScalar(Kb, dt/2.0), NULL));
     Kc->memlocked = true;
     
-    vecteur *Kd = dsec(
+    vecteur* Kd = dsec(
         time + dt,
         vectSum(pos, vectScalar(vit, dt), vectScalar(Kb, dt/2.0), NULL),
         vectSum(vit, vectScalar(Kc, dt), NULL));
@@ -259,10 +259,10 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
     // TODO: prendre des vecteurs en paramètre.
 
     // Convertion des unitées
-    pos = pos*100; // m -> cm
-    vit = vit*100; // m/s ->  cm*/s
-    angle = angle*360/(2.0*3.14);
-    vitAng=vitAng*360/(2.0*3.14);
+    pos    = pos * 100; // m -> cm
+    vit    = vit * 100; // m/s ->  cm*/s
+    angle  =  angle * 360 / (2.0*3.14);
+    vitAng = vitAng * 360 / (2.0*3.14);
     
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
 }
@@ -284,9 +284,9 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
  * @param vit Pointeur vers vecteur vitesse.
  * @return Pointeur vers le vecteur dérivée seconde.
  */
-vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
+vecteur* dSec(double time, vecteur *pos, vecteur *vit) {
     // Initialisation du résultat.
-    vecteur *res = malloc(sizeof(vecteur));
+    vecteur* res = malloc(sizeof(vecteur));
     // Par défaut, le vecteur résultat n'est pas verrouillé.
     res->memlocked = false;
 
@@ -339,12 +339,11 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
  * @param argv Tableau contenant les arguments passés en ligne de commande.
  * @return Code de sortie.
  */
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
     // Set locale
-    char *s=setlocale(LC_NUMERIC,"fr_FR");
+    char* s=setlocale(LC_NUMERIC,"fr_FR");
     
-
     // Check arguments
     if (s == NULL) {
         /* Sur Linux vérifier la présence des paquets locales et locales-all */
@@ -357,9 +356,9 @@ int main(int argc, char *argv[]) {
     }
 
     /* Récupération des valeurs numériques des arguments par atof() */
-    double pas      = atof(argv[1]); // (s)
-    double duree    = atof(argv[2]); // (s)
-    double angle    = atof(argv[3]); // (deg)
+    double pas   = atof(argv[1]); // (s)
+    double duree = atof(argv[2]); // (s)
+    double angle = atof(argv[3]); // (deg)
     // conversion edeg -> rad.
     angle = angle*2.0*3.14/360.0;
 
@@ -375,15 +374,16 @@ int main(int argc, char *argv[]) {
     double nbreElemBoucle_s = duree/pas;
 
     // Contruction des vecteurs positions et vitesses
-    vecteur    *Y     = malloc(sizeof(vecteur));
-    vecteur    *dY    = malloc(sizeof(vecteur));
-    rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
+    vecteur* ptr_Y     = malloc(sizeof(vecteur));
+    vecteur* ptr_dY    = malloc(sizeof(vecteur));
+
+    rk4_result* ptr_RK4 = malloc(sizeof(rk4_result));
     // Initialisation des vecteurs.
     // TODO: vérifier si memlock est nécessaire.
-    Y->x  = 0.0;   // x=0
-    Y->y  = angle; // angle initial
-    dY->x = 0.0;   // vitesse linéique initale nulle
-    dY->y = 0.0;   // vitesse angulaire nulle
+    ptr_Y->x  = 0.0;   // x=0
+    ptr_Y->y  = angle; // angle initial
+    ptr_dY->x = 0.0;   // vitesse linéique initale nulle
+    ptr_dY->y = 0.0;   // vitesse angulaire nulle
 
     // Scalaires pour affichage.
     double pos_s    = 0;
@@ -398,19 +398,19 @@ int main(int argc, char *argv[]) {
     // TODO: utiliser directement tf et dt.
     for (int i=1; i<nbreElemBoucle_s; i++){
         
-        Y_rk4 = rangeKutta(*dSec,temps_s,Y,dY,pas);
+        ptr_RK4 = rangeKutta(*dSec, temps_s, ptr_Y, ptr_dY, pas);
         // TODO: verifier type de sortie vecteur vs pointeur.
 
         // TODO: utiliser directement tf et dt de la boucle for.
         temps_s = temps_s + pas;
 
-        *Y  = Y_rk4->position;
-        *dY = Y_rk4->vitesse;
+        *ptr_Y  = ptr_RK4->position;
+        *ptr_dY = ptr_RK4->vitesse;
 
-        pos_s    = Y->x;
-        vit_s    = dY->x;
-        angle    = Y->y;
-        vitAng_s = dY->y;
+        pos_s    = ptr_Y->x;
+        angle    = ptr_Y->y;
+        vit_s    = ptr_dY->x;
+        vitAng_s = ptr_dY->y;
         
         impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 

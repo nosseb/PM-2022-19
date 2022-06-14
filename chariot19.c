@@ -295,14 +295,14 @@ vecteur* dSec(double time, vecteur *pos, vecteur *vit) {
     res->memlocked = false;
 
     // Variables intermédiaires
-    double a = 8.2;
-    double b = 5.3196*pow(10.0,-4.0)*cos(pos->x);
-    double c = -2600;
-    double d = 5.3196*pow(10.0,-4.0)*sin(pos->x);
-    double e = 5.3196*pow(10.0,-4.0)*cos(pos->x);
-    double f = 4.865000054;
-    double g1= -5.2185276*pow(10.0,-3.0)*sin(pos->x);
-    double h = -0.09;
+    double a  = 8.2;
+    double b  = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+    double c  = -2600;
+    double d  = 5.3196*pow(10.0,-4.0)*sin(pos->x);
+    double e  = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+    double f  = 4.865000054;
+    double g1 = -5.2185276*pow(10.0,-3.0)*sin(pos->x);
+    double h  = -0.09;
     
     // équations de notre système
 
@@ -419,7 +419,6 @@ int main(int argc, char* argv[]) {
         vitAng_s = ptr_dY->y;
         
         impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
-
     }
 
     return EXIT_SUCCESS;

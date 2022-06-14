@@ -336,12 +336,12 @@ vecteur* dSec2(double time, vecteur *pos, vecteur *vit) {
     res->memlocked = false;
 
     // Variables intermédiaires
-    double a  = 0,648780487805;
-    double b  = 0,648780487805;
-    double c  = 0,0317073170732;
-    double d  = 0,798234880614;
-    double e  = 0,798234880614;
-    double f  = 0,0135039735442;
+    double a  = 0.648780487805;
+    double b  = 0.648780487805;
+    double c  = 0.0317073170732;
+    double d  = 0.798234880614;
+    double e  = 0.798234880614;
+    double f  = 0.0135039735442;
     
     // équations de notre système
 

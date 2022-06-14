@@ -11,13 +11,13 @@
 
 
 
-	/********************************************************************
-	 *
-	 * CRETIN Nicolas & BESSON Robinson
-	 * Groupe n° 19
+    /********************************************************************
+     *
+     * CRETIN Nicolas & BESSON Robinson
+     * Groupe n° 19
      * Groupe gagnant 
-	 *
-	 ********************************************************************/
+     *
+     ********************************************************************/
 
 
 
@@ -77,7 +77,7 @@ typedef struct Vecteur {
 
 
 /**
- * @brief Structure pour stocker les résultat de RK4 (position et vitesse).
+ * Structure pour stocker les résultat de RK4 (position et vitesse).
  * 
  */
 typedef struct RK4Result {
@@ -232,6 +232,7 @@ rk4_result *rangeKutta(
     free(Kc);
     free(Kd);
     
+    // TODO: Vérifier que res contient des vecteurs (et non des pointeurs).
     return res;
 }
 
@@ -255,6 +256,7 @@ rk4_result *rangeKutta(
  */
 void impLigneDonnees( double temps, double pos, double vit, double angle, \
     double vitAng) {
+    // TODO: prendre des vecteurs en paramètre.
 
     // Convertion des unitées
     pos = pos*100; // m -> cm
@@ -290,29 +292,29 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 
     // Variables intermédiaires
     double a = 8.2;
-	double b = 5.3196*pow(10.0,-4.0)*cos(pos->x);
-	double c = -2600;
-	double d = 5.3196*pow(10.0,-4.0)*sin(pos->x);
-	double e = 5.3196*pow(10.0,-4.0)*cos(pos->x);
-	double f = 4.865000054;
-	double g1= -5.2185276*pow(10.0,-3.0)*sin(pos->x);
-	double h = -0.09;
-	
-	// équations de notre système
+    double b = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+    double c = -2600;
+    double d = 5.3196*pow(10.0,-4.0)*sin(pos->x);
+    double e = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+    double f = 4.865000054;
+    double g1= -5.2185276*pow(10.0,-3.0)*sin(pos->x);
+    double h = -0.09;
+    
+    // équations de notre système
 
     // Dérivée seconde de la position.
-	res->x =
+    res->x =
         (g1-vit->x*(c*e/a)
-		+vit->y*h
-		-pow(vit->y,2.0)*(d*e/a))
-		/(f-b*e/a);
+        +vit->y*h
+        -pow(vit->y,2.0)*(d*e/a))
+        /(f-b*e/a);
 
     // Dérivée seconde de l'angle.
-	res->y =
+    res->y =
         (g1-vit->x*(c*f/b) 
-		+vit->y*h
-		-pow(vit->y,2.0)*(d*f/b))
-		/(e-a*f/b);
+        +vit->y*h
+        -pow(vit->y,2.0)*(d*f/b))
+        /(e-a*f/b);
     
     // Libération des vecteurs paramètres si non verrouillés.
     if (!(pos->memlocked)) free(pos);
@@ -340,22 +342,22 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 int main(int argc, char *argv[]) {
 
     // Set locale
-	char *s=setlocale(LC_NUMERIC,"fr_FR");
-	
+    char *s=setlocale(LC_NUMERIC,"fr_FR");
+    
 
     // Check arguments
-	if (s == NULL) {
-		/* Sur Linux vérifier la présence des paquets locales et locales-all */
-		printf("Échec de la francisation des nombres !\n");
-		return EXIT_FAILURE;
-	}
-	if (argc!=4) {
-		printf("Usage : %s pas durée angle\n", argv[0]);
-		return EXIT_FAILURE;
-	}
+    if (s == NULL) {
+        /* Sur Linux vérifier la présence des paquets locales et locales-all */
+        printf("Échec de la francisation des nombres !\n");
+        return EXIT_FAILURE;
+    }
+    if (argc!=4) {
+        printf("Usage : %s pas durée angle\n", argv[0]);
+        return EXIT_FAILURE;
+    }
 
-	/* Récupération des valeurs numériques des arguments par atof() */
-    double pas      = atof(argv[1]); // (s) // float ????
+    /* Récupération des valeurs numériques des arguments par atof() */
+    double pas      = atof(argv[1]); // (s)
     double duree    = atof(argv[2]); // (s)
     double angle    = atof(argv[3]); // (deg)
     // conversion edeg -> rad.
@@ -366,58 +368,53 @@ int main(int argc, char *argv[]) {
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
         "\tvit. ang. (°/s)\n");
 
-    double nbreElemBoucle_s = duree/pas;
-
     // Initialisation simulation.
 
-    //vecteur *pos_v = malloc(sizeof(vecteur));
-    //vecteur *vit_v = malloc(sizeof(vecteur));
-    vecteur *Y = malloc(sizeof(vecteur));
-    vecteur *Y_Point = malloc(sizeof(vecteur));
-    //vecteur *Y_Point_Point = malloc(sizeof(vecteur));
+    // Nombre d'itérations à effectuer.
+    // TODO: supprimer (on peut dirrectement faire la boucle avec tf et dt).
+    double nbreElemBoucle_s = duree/pas;
+
+    // Contruction des vecteurs positions et vitesses
+    vecteur    *Y     = malloc(sizeof(vecteur));
+    vecteur    *dY    = malloc(sizeof(vecteur));
     rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
-    Y->x=0; //x=0
-    Y->y=angle; // angle initial
-    Y_Point->x = 0; // vitesse linéique initale nulle
-    Y_Point->y = 0; // vitesse angulaire nulle
+    // Initialisation des vecteurs.
+    // TODO: vérifier si memlock est nécessaire.
+    Y->x  = 0.0;   // x=0
+    Y->y  = angle; // angle initial
+    dY->x = 0.0;   // vitesse linéique initale nulle
+    dY->y = 0.0;   // vitesse angulaire nulle
 
-
-    // TODO Contruction des vecteurs positions et vitesses
-    // (sous forme de pointeur)
-    double pos_s = 0; // on part de x=zero
-    double vit_s = 0; // vitesse initale nulle
-    // angle déja défini
-    double vitAng_s = 0; 
-    double temps_s = 0;
+    // Scalaires pour affichage.
+    double pos_s    = 0;
+    double vit_s    = 0;
+    double vitAng_s = 0;
+    double temps_s  = 0;
     
-    
-    // TODO Je pense que ça aussi pourait être déplacé
-    // Peut-être suite au calcul du nombre de tour de boucle.
-
+    // Affichage des valeurs initiales.
     impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
-    for (int i=1;i<nbreElemBoucle_s;i++){
-             
-        Y_rk4 = rangeKutta(*dSec,temps_s,Y,Y_Point,pas);
-        // TODO verifier type de sortie rangeKutta vecteur versus pointeur
+    // Boucle de simulation.
+    // TODO: utiliser directement tf et dt.
+    for (int i=1; i<nbreElemBoucle_s; i++){
+        
+        Y_rk4 = rangeKutta(*dSec,temps_s,Y,dY,pas);
+        // TODO: verifier type de sortie vecteur vs pointeur.
 
+        // TODO: utiliser directement tf et dt de la boucle for.
         temps_s = temps_s + pas;
-        // Y->x= Y_rk4->position->x;
-        // Y->y= Y_rk4->position->y;
-        // Y_Point->x= Y_rk4->vitesse->x;
-        // Y_Point->y= Y_rk4->vitesse->y;
 
-        *Y = Y_rk4->position;
-        *Y_Point= Y_rk4->vitesse;
+        *Y  = Y_rk4->position;
+        *dY = Y_rk4->vitesse;
 
-        pos_s = Y->x;
-        vit_s = Y_Point->x;
-        angle = Y->y;
-        vitAng_s = Y_Point->y;
+        pos_s    = Y->x;
+        vit_s    = dY->x;
+        angle    = Y->y;
+        vitAng_s = dY->y;
         
         impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
     }
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

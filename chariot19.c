@@ -395,15 +395,8 @@ int main(int argc, char *argv[]) {
     impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
 
     for (int i=1;i<nbreElemBoucle_s;i++){
-        
-        // TODO Prendre comme paramètre les vecteurs Y et Y_Point.
-
-        // ancien ligne : 
-        //Y_rk4 = rangeKutta(*dSec,temps_s,pos_v,vit_v,pas);
-
-        // Y_point_point = ....
-        
-        Y_rk4 = rangeKutta(*dSec,temps_s,Y,Y_Point,pas);
+             
+        *Y_rk4 = rangeKutta(*dSec,temps_s,Y,Y_Point,pas);
         // TODO verifier type de sortie rangeKutta vecteur versus pointeur
 
         temps_s = temps_s + pas;

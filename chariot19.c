@@ -374,10 +374,6 @@ int main(int argc, char* argv[]) {
 
     // Initialisation simulation.
 
-    // Nombre d'itérations à effectuer.
-    // TODO: supprimer (on peut dirrectement faire la boucle avec tf et dt).
-    double nbreElemBoucle_s = duree/pas;
-
     // Contruction des vecteurs positions et vitesses
     vecteur* ptr_Y    = malloc(sizeof(vecteur));
     vecteur* ptr_dY   = malloc(sizeof(vecteur));
@@ -386,40 +382,24 @@ int main(int argc, char* argv[]) {
 
     rk4_result* ptr_RK4 = malloc(sizeof(rk4_result));
     // Initialisation des vecteurs.
-    // TODO: vérifier si memlock est nécessaire.
     ptr_Y->x  = 0.0;   // x=0
     ptr_Y->y  = angle; // angle initial
     ptr_dY->x = 0.0;   // vitesse linéique initale nulle
     ptr_dY->y = 0.0;   // vitesse angulaire nulle
-
-    // Scalaires pour affichage.
-    double pos_s    = 0;
-    double vit_s    = 0;
-    double vitAng_s = 0;
-    double temps_s  = 0;
     
     // Affichage des valeurs initiales.
-    impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
+    impLigneDonnees(0, 0, 0, angle, 0);
 
     // Boucle de simulation.
-    // TODO: utiliser directement tf et dt.
-    for (int i=1; i<nbreElemBoucle_s; i++){
+    for (double temps=0; temps<duree; temps+=pas) {
         
-        ptr_RK4 = rangeKutta(*dSec, temps_s, ptr_Y, ptr_dY, pas);
+        ptr_RK4 = rangeKutta(*dSec, temps, ptr_Y, ptr_dY, pas);
         // TODO: verifier type de sortie vecteur vs pointeur.
-
-        // TODO: utiliser directement tf et dt de la boucle for.
-        temps_s = temps_s + pas;
 
         *ptr_Y  = ptr_RK4->position;
         *ptr_dY = ptr_RK4->vitesse;
-
-        pos_s    = ptr_Y->x;
-        angle    = ptr_Y->y;
-        vit_s    = ptr_dY->x;
-        vitAng_s = ptr_dY->y;
         
-        impLigneDonnees(temps_s, pos_s, vit_s, angle, vitAng_s);
+        impLigneDonnees(temps, ptr_Y->x, ptr_dY->x, ptr_Y->y, ptr_dY->y);
     }
 
     return EXIT_SUCCESS;

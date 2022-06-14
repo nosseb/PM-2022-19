@@ -367,6 +367,9 @@ int main(int argc, char* argv[]) {
     // conversion edeg -> rad.
     angle = angle*2.0*3.14/360.0;
 
+    debug("pas : %f\n", pas);
+    debug("duree : %f\n", duree);
+
 
     // Affiche l'en-tête du tableau.
     printf("Temps (s)    \tpos. (cm)    \tvit (cm/s)    \tangle (°)    "
@@ -388,10 +391,10 @@ int main(int argc, char* argv[]) {
     ptr_dY->y = 0.0;   // vitesse angulaire nulle
     
     // Affichage des valeurs initiales.
-    impLigneDonnees(0, 0, 0, angle, 0);
-
+    impLigneDonnees(0.0, 0.0, 0.0, angle, 0.0);
+    
     // Boucle de simulation.
-    for (double temps=0; temps<duree; temps+=pas) {
+    for (double temps=pas; temps<duree; temps+=pas) {
         
         ptr_RK4 = rangeKutta(*dSec, temps, ptr_Y, ptr_dY, pas);
         // TODO: verifier type de sortie vecteur vs pointeur.
@@ -401,6 +404,6 @@ int main(int argc, char* argv[]) {
         
         impLigneDonnees(temps, ptr_Y->x, ptr_dY->x, ptr_Y->y, ptr_dY->y);
     }
-
+    
     return EXIT_SUCCESS;
 }

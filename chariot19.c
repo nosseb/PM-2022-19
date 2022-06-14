@@ -436,7 +436,7 @@ int main(int argc, char* argv[]) {
     // Boucle de simulation.
     for (double temps=pas; temps<duree; temps+=pas) {
         
-        ptr_RK4 = rangeKutta(*dSec, temps, ptr_Y, ptr_dY, pas);
+        ptr_RK4 = rangeKutta(*dSec2, temps, ptr_Y, ptr_dY, pas);
         // TODO: verifier type de sortie vecteur vs pointeur.
 
         *ptr_Y  = ptr_RK4->position;

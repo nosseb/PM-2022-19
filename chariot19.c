@@ -386,9 +386,6 @@ int main(int argc, char *argv[]) {
     double temps_s = 0;
     
     
-    // Ce sont cest vecteurs Y et Y_Point qui doivent être donnés en paramètres
-    // à rangeKutta. WHAAAAAAATTTTTT ??
-    
     // TODO Je pense que ça aussi pourait être déplacé
     // Peut-être suite au calcul du nombre de tour de boucle.
 
@@ -396,11 +393,11 @@ int main(int argc, char *argv[]) {
 
     for (int i=1;i<nbreElemBoucle_s;i++){
              
-        *Y_rk4 = rangeKutta(*dSec,temps_s,Y,Y_Point,pas);
+        Y_rk4 = rangeKutta(*dSec,temps_s,Y,Y_Point,pas);
         // TODO verifier type de sortie rangeKutta vecteur versus pointeur
 
         temps_s = temps_s + pas;
-        Y = Y_rk4->position;
+        Y= Y_rk4->position;
         Y_Point = Y_rk4->vitesse;
         pos_s = Y->x;
         vit_s = Y_Point->x;

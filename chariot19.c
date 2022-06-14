@@ -211,6 +211,7 @@ rk4_result* rangeKutta(
     Kd->memlocked = true;
 
     // Calcul de la position et de la vitesse.
+    // TODO: réutiliser les vecteurs d'entrée pour ne pas les réallouer.
     res->position = *vectSum(
         pos, 
         vectScalar(vit, dt), 

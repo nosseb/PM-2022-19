@@ -67,4 +67,4 @@ mov:
 
 .PHONY: run
 run:
-	./chariot19 0.1 10 90
+	./chariot19 0,1 10 90

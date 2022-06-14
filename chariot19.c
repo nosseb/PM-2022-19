@@ -370,11 +370,11 @@ int main(int argc, char *argv[]) {
 
     // Initialisation simulation.
 
-    vecteur *pos_v = malloc(sizeof(vecteur));
-    vecteur *vit_v = malloc(sizeof(vecteur));
+    //vecteur *pos_v = malloc(sizeof(vecteur));
+    //vecteur *vit_v = malloc(sizeof(vecteur));
     vecteur *Y = malloc(sizeof(vecteur));
     vecteur *Y_Point = malloc(sizeof(vecteur));
-    vecteur *Y_Point_Point = malloc(sizeof(vecteur));
+    //vecteur *Y_Point_Point = malloc(sizeof(vecteur));
     rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
     
     // TODO Contruction des vecteurs positions et vitesses
@@ -403,7 +403,7 @@ int main(int argc, char *argv[]) {
 
         // Y_point_point = ....
         
-        Y_rk4 = rangeKutta(Y_Point_Point,temps_s,pos_v,vit_v,pas);
+        Y_rk4 = rangeKutta(*dSec,temps_s,pos_v,vit_v,pas);
         // TODO verifier type de sortie rangeKutta vecteur versus pointeur
 
         temps_s = temps_s + pas;

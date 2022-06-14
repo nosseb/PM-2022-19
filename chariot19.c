@@ -403,7 +403,7 @@ int main(int argc, char *argv[]) {
 
         // Y_point_point = ....
         
-        Y_rk4 = rangeKutta(*dSec,temps_s,pos_v,vit_v,pas);
+        Y_rk4 = rangeKutta(*dSec,temps_s,Y,Y_Point,pas);
         // TODO verifier type de sortie rangeKutta vecteur versus pointeur
 
         temps_s = temps_s + pas;

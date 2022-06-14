@@ -427,7 +427,7 @@ int main(int argc, char* argv[]) {
     // Initialisation des vecteurs.
     ptr_Y->x  = 0.0;   // x=0
     ptr_Y->y  = angle; // angle initial
-    ptr_dY->x = 2.0;   // vitesse linéique initale nulle
+    ptr_dY->x = 0.0;   // vitesse linéique initale nulle
     ptr_dY->y = 0.0;   // vitesse angulaire nulle
     
     // Affichage des valeurs initiales.

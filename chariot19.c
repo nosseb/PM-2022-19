@@ -98,7 +98,7 @@ typedef struct RK4Result {
  * @brief Calcul la somme de vecteurs.
  * Prend en paramètre un nombre variable de vecteurs (1 minimum) et calcule
  * leur somme.
- * Tout vecteur n'aitant pas marqué comme "memlocked" est supprimé de la 
+ * Tout vecteur n'étant pas marqué comme "memlocked" est supprimé de la 
  * mémoire.
  * Le résultat n'est pas marqué comme "memlocked".
  *
@@ -125,16 +125,18 @@ vecteur *vectSum(vecteur * ftm, ...) {
     // Lors de la première itération, ftm est le premier paramètre, donnée de
     // manière explicite. Dans les itérations suivantes, ftm est récupéré via
     // la va_arg.
+    /*
     while (ftm != NULL) {
         res->x += ftm->x;
         res->y += ftm->y;
 
         // Si le vecteur n'est pas verrouillé, on le libère.
-        if (!(ftm->memlocked)) free(ftm);
+       // if (!(ftm->memlocked)) free(ftm);
 
         // On récupère le prochain paramètre.
         ftm = va_arg(ap, vecteur *);
     }
+*/
 
     // Fin nb de paramètres variable.
     va_end(ap);
@@ -164,7 +166,7 @@ vecteur *vectScalar(vecteur *v, double s) {
     res->y = v->y * s;
 
     // Si le vecteur paramètre n'est pas verrouillé, on le libère.
-    if (!(v->memlocked)) free(v);
+    // if (!(v->memlocked)) free(v);
 
     return res;
 };
@@ -315,8 +317,8 @@ vecteur *dSec(double time, vecteur *pos, vecteur *vit) {
 		/(e-a*f/b);
     
     // Libération des vecteurs paramètres si non verrouillés.
-    if (!(pos->memlocked)) free(pos);
-    if (!(vit->memlocked)) free(vit);
+    // if (!(pos->memlocked)) free(pos);
+    // if (!(vit->memlocked)) free(vit);
 
     return res;
 }

@@ -225,6 +225,10 @@ rk4_result* rangeKutta(
         vectScalar(Kc, dt/3.0),
         vectScalar(Kd, dt/6.0),
         NULL);
+
+    // Pour les boucles suivantes, on vérrouille les vecteurs résultats.
+    res->position.memlocked = true;
+    res->vitesse.memlocked = true;
     
     // Libération des variables intermédiaires.
     free(Ka);
@@ -374,8 +378,10 @@ int main(int argc, char* argv[]) {
     double nbreElemBoucle_s = duree/pas;
 
     // Contruction des vecteurs positions et vitesses
-    vecteur* ptr_Y     = malloc(sizeof(vecteur));
-    vecteur* ptr_dY    = malloc(sizeof(vecteur));
+    vecteur* ptr_Y    = malloc(sizeof(vecteur));
+    vecteur* ptr_dY   = malloc(sizeof(vecteur));
+    ptr_Y->memlocked  = true;
+    ptr_dY->memlocked = true;
 
     rk4_result* ptr_RK4 = malloc(sizeof(rk4_result));
     // Initialisation des vecteurs.

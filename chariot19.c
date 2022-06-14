@@ -81,8 +81,8 @@ typedef struct Vecteur {
  * 
  */
 typedef struct RK4Result {
-    vecteur position;
-    vecteur vitesse;
+    vecteur *position;
+    vecteur *vitesse;
 } rk4_result;
 
 
@@ -402,8 +402,10 @@ int main(int argc, char *argv[]) {
         // TODO verifier type de sortie rangeKutta vecteur versus pointeur
 
         temps_s = temps_s + pas;
-        Y= Y_rk4->position;
-        Y_Point = Y_rk4->vitesse;
+        Y->x= Y_rk4->position->x;
+        Y->y= Y_rk4->position->y;
+        Y_Point->x= Y_rk4->vitesse->x;
+        Y_Point->y= Y_rk4->vitesse->y;
         pos_s = Y->x;
         vit_s = Y_Point->x;
         angle = Y->y;

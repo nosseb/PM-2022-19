@@ -376,7 +376,12 @@ int main(int argc, char *argv[]) {
     vecteur *Y_Point = malloc(sizeof(vecteur));
     //vecteur *Y_Point_Point = malloc(sizeof(vecteur));
     rk4_result *Y_rk4 = malloc(sizeof(rk4_result));
-    
+    Y->x=0; //x=0
+    Y->y=angle; // angle initial
+    Y_Point->x = 0; // vitesse linéique initale nulle
+    Y_Point->y = 0; // vitesse angulaire nulle
+
+
     // TODO Contruction des vecteurs positions et vitesses
     // (sous forme de pointeur)
     double pos_s = 0; // on part de x=zero

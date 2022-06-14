@@ -331,6 +331,46 @@ vecteur* dSec(double time, vecteur *pos, vecteur *vit) {
 }
 
 
+vecteur* dSec2(double time, vecteur *pos, vecteur *vit) {
+    // Initialisation du résultat.
+    vecteur* res = malloc(sizeof(vecteur));
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
+
+    // Variables intermédiaires
+    double a  = 0.648780487805;
+    double b  = 0.648780487805;
+    double c  = 0.0317073170732;
+    double d  = 0.798234880614;
+    double e  = 0.798234880614;
+    double f  = 0.0135039735442;
+    
+    // équations de notre système
+
+    // Dérivée seconde de la position.
+    res->x =
+        (a*sin(pos->y)*pow(vit->y,2.0)
+        +b*e*sin(pos->y)*cos(pos->y)
+        +b*f*(vit->y)*cos(pos->y)
+        -c*(vit->x))
+        /(1-b*d*pow(cos(pos->y),2.0));
+
+    // Dérivée seconde de l'angle.
+    res->y =
+        (-d*a*sin(pos->y)*cos(pos->y)*pow(vit->y,2.0)
+        +d*c*(vit->x)*cos(pos->y)
+        -e*sin(pos->y)
+        -f*(vit->y))
+        /(1-b*d*pow(cos(pos->y),2.0));
+    
+    // Libération des vecteurs paramètres si non verrouillés.
+    if (!(pos->memlocked)) free(pos);
+    if (!(vit->memlocked)) free(vit);
+
+    return res;
+}
+
+
 
 /*******************************************************************
  *                                                                 *
@@ -399,7 +439,7 @@ int main(int argc, char* argv[]) {
         
         impLigneDonnees(temps+pas, ptr_Y->x, ptr_dY->x, ptr_Y->y, ptr_dY->y);
         
-        ptr_RK4 = rangeKutta(*dSec, temps, ptr_Y, ptr_dY, pas);
+        ptr_RK4 = rangeKutta(*dSec2, temps, ptr_Y, ptr_dY, pas);
         // TODO: verifier type de sortie (vecteur vs pointeur).
 
         *ptr_Y  = ptr_RK4->position;

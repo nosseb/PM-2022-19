@@ -329,6 +329,44 @@ vecteur* dSec(double time, vecteur *pos, vecteur *vit) {
 }
 
 
+vecteur* dSec2(double time, vecteur *pos, vecteur *vit) {
+    // Initialisation du résultat.
+    vecteur* res = malloc(sizeof(vecteur));
+    // Par défaut, le vecteur résultat n'est pas verrouillé.
+    res->memlocked = false;
+
+    // Variables intermédiaires
+    double a  = 0,648780487805;
+    double b  = 0,648780487805;
+    double c  = 0,0317073170732;
+    double d  = 0,798234880614;
+    double e  = 0,798234880614;
+    double f  = 0,0135039735442;
+    
+    // équations de notre système
+
+    // Dérivée seconde de la position.
+    res->x =
+        (g1-(vit->x)*(c*e/a)
+        +(vit->y)*h
+        -pow(vit->y,2.0)*(d*e/a))
+        /(f-b*e/a);
+
+    // Dérivée seconde de l'angle.
+    res->y =
+        (g1-(vit->x)*(c*f/b) 
+        +(vit->y)*h
+        -pow(vit->y,2.0)*(d*f/b))
+        /(e-a*f/b);
+    
+    // Libération des vecteurs paramètres si non verrouillés.
+    if (!(pos->memlocked)) free(pos);
+    if (!(vit->memlocked)) free(vit);
+
+    return res;
+}
+
+
 
 /*******************************************************************
  *                                                                 *
@@ -387,7 +425,7 @@ int main(int argc, char* argv[]) {
     // Initialisation des vecteurs.
     ptr_Y->x  = 0.0;   // x=0
     ptr_Y->y  = angle; // angle initial
-    ptr_dY->x = 0.0;   // vitesse linéique initale nulle
+    ptr_dY->x = 2.0;   // vitesse linéique initale nulle
     ptr_dY->y = 0.0;   // vitesse angulaire nulle
     
     // Affichage des valeurs initiales.

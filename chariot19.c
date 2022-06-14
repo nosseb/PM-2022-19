@@ -297,29 +297,31 @@ vecteur* dSec(double time, vecteur *pos, vecteur *vit) {
 
     // Variables intermédiaires
     double a  = 8.2;
-    double b  = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+    double b  = 5.3196 * pow(10.0, -4.0) * cos(pos->x);
     double c  = -2600;
-    double d  = 5.3196*pow(10.0,-4.0)*sin(pos->x);
-    double e  = 5.3196*pow(10.0,-4.0)*cos(pos->x);
+    double d  = 5.3196 * pow(10.0, -4.0) * sin(pos->x);
+    double e  = 5.3196 * pow(10.0, -4.0) * cos(pos->x);
     double f  = 4.865000054;
-    double g1 = -5.2185276*pow(10.0,-3.0)*sin(pos->x);
+    double g1 = -5.2185276 * pow(10.0, -3.0) * sin(pos->x);
     double h  = -0.09;
     
     // équations de notre système
 
     // Dérivée seconde de la position.
     res->x =
-        (g1-vit->x*(c*e/a)
-        +vit->y*h
-        -pow(vit->y,2.0)*(d*e/a))
-        /(f-b*e/a);
+        ( g1
+          - (vit->x) * (c*e/a)
+          + (vit->y) * h
+          - pow(vit->y, 2.0) * (d*e/a))
+        / (f - (b*e/a) );
 
     // Dérivée seconde de l'angle.
     res->y =
-        (g1-vit->x*(c*f/b) 
-        +vit->y*h
-        -pow(vit->y,2.0)*(d*f/b))
-        /(e-a*f/b);
+        ( g1
+          - (vit->x) * (c*f/b)
+          + (vit->y) * h
+          - pow(vit->y, 2.0) * (d*f/b))
+        / (e - a*f/b);
     
     // Libération des vecteurs paramètres si non verrouillés.
     if (!(pos->memlocked)) free(pos);

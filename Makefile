@@ -37,7 +37,7 @@ OBJS_OTH	= $(SRCS_OTH:.c=.o)
 
 # Tâche par défaut.
 # Nécessite la présence de l'éxécutable.
-all: $(EXECS)
+all: clean $(EXECS)
 
 # Tâche associé au fichier objet principal.
 # Nécessite la présence du fichier source principal.

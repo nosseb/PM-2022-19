@@ -347,17 +347,19 @@ vecteur* dSec2(double time, vecteur *pos, vecteur *vit) {
 
     // Dérivée seconde de la position.
     res->x =
-        (g1-(vit->x)*(c*e/a)
-        +(vit->y)*h
-        -pow(vit->y,2.0)*(d*e/a))
-        /(f-b*e/a);
+        (a*sin(pos->y)*pow(vit->y,2.0)
+        +b*e*sin(pos->y)*cos(pos->y)
+        +b*f*(vit->y)*cos(pos->y)
+        -c*(vit->x))
+        /(1-b*d*pow(cos(pos->y),2.0));
 
     // Dérivée seconde de l'angle.
     res->y =
-        (g1-(vit->x)*(c*f/b) 
-        +(vit->y)*h
-        -pow(vit->y,2.0)*(d*f/b))
-        /(e-a*f/b);
+        (-d*a*sin(pos->y)*cos(pos->y)*pow(vit->y,2.0)
+        +d*c*(vit->x)*cos(pos->y)
+        -e*sin(pos->y)
+        -f*(vit->y))
+        /(1-b*d*pow(cos(pos->y),2.0));
     
     // Libération des vecteurs paramètres si non verrouillés.
     if (!(pos->memlocked)) free(pos);

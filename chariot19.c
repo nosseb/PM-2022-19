@@ -393,18 +393,17 @@ int main(int argc, char* argv[]) {
     ptr_dY->y = 0.0;   // vitesse angulaire nulle
     
     // Affichage des valeurs initiales.
-    impLigneDonnees(0.0, 0.0, 0.0, angle, 0.0);
     
     // Boucle de simulation.
-    for (double temps=pas; temps<duree; temps+=pas) {
+    for (double temps=0.0; temps<duree; temps+=pas) {
+        
+        impLigneDonnees(temps+pas, ptr_Y->x, ptr_dY->x, ptr_Y->y, ptr_dY->y);
         
         ptr_RK4 = rangeKutta(*dSec, temps, ptr_Y, ptr_dY, pas);
         // TODO: verifier type de sortie (vecteur vs pointeur).
 
         *ptr_Y  = ptr_RK4->position;
         *ptr_dY = ptr_RK4->vitesse;
-        
-        impLigneDonnees(temps+pas, ptr_Y->x, ptr_dY->x, ptr_Y->y, ptr_dY->y);
     }
     
     return EXIT_SUCCESS;

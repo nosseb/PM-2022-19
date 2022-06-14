@@ -402,7 +402,7 @@ int main(int argc, char* argv[]) {
         *ptr_Y  = ptr_RK4->position;
         *ptr_dY = ptr_RK4->vitesse;
         
-        impLigneDonnees(temps, ptr_Y->x, ptr_dY->x, ptr_Y->y, ptr_dY->y);
+        impLigneDonnees(temps+pas, ptr_Y->x, ptr_dY->x, ptr_Y->y, ptr_dY->y);
     }
     
     return EXIT_SUCCESS;

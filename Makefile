@@ -68,3 +68,11 @@ mov:
 .PHONY: run
 run:
 	./chariot19 0,1 10 90
+
+.PHONY: data
+data:
+	./chariot19 0,1 200 20 | sed 's/\t/;/g' data.csv > data.csv
+
+.PHONY: export
+export:
+	cp data.csv /mnt/c/e_Tous\ mes\ dossiers/a\ sauvegarder\ provisoir/Cours/ENSISA/1A/S_6/projet\ maths/export

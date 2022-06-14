@@ -71,7 +71,9 @@ run:
 
 .PHONY: data
 data:
-	./chariot19 0,1 200 20 | sed 's/\t/;/g' data.csv > data.csv
+	./chariot19 0,1 200 20 > data.txt
+	sed 's/\t/;/g' data.txt > data.csv
+	rm data.txt
 
 .PHONY: export
 export:

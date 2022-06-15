@@ -75,7 +75,7 @@ run:
 
 .PHONY: data
 data:
-	./chariot19 0,1 200 190 > data.txt
+	./chariot19 0,05 15 175 > data.txt
 	sed 's/\t/;/g' data.txt > data.csv
 	rm data.txt
 

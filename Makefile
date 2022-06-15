@@ -69,9 +69,13 @@ mov:
 run:
 	./chariot19 0,1 10 90
 
+# param 1 : pas
+# param 2 : tps de simulation
+# param 3 : angle compris entre 
+
 .PHONY: data
 data:
-	./chariot19 0,1 200 20 > data.txt
+	./chariot19 0,1 200 190 > data.txt
 	sed 's/\t/;/g' data.txt > data.csv
 	rm data.txt
 

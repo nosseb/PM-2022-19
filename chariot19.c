@@ -264,10 +264,10 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
     // TODO: prendre des vecteurs en paramètre.
 
     // Convertion des unitées
-    pos    = pos * 100; // m -> cm
-    vit    = vit * 100; // m/s ->  cm*/s
-    angle  =  angle * 360 / (2.0*3.14);
-    vitAng = vitAng * 360 / (2.0*3.14);
+    pos    = pos * 100.0; // m -> cm
+    vit    = vit * 100.0; // m/s ->  cm*/s
+    angle  =  angle * 180.0 / (3,141592653589); // rad -> deg
+    vitAng = vitAng * 180.0 / (3,141592653589); //  rad/s -> deg/s
     
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
 }
@@ -283,12 +283,13 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
 
 /**
  * @brief Calcul la dérivée seconde.
- *
+ * n'est plus untilisée !!
  * @param time Temps écoulé depuis le début de la simulation.
  * @param pos Pointeur vers vecteur position.
  * @param vit Pointeur vers vecteur vitesse.
  * @return Pointeur vers le vecteur dérivée seconde.
  */
+/*
 vecteur* dSec(double time, vecteur *pos, vecteur *vit) {
     // Initialisation du résultat.
     vecteur* res = malloc(sizeof(vecteur));
@@ -329,7 +330,7 @@ vecteur* dSec(double time, vecteur *pos, vecteur *vit) {
 
     return res;
 }
-
+*/
 
 vecteur* dSec2(double time, vecteur *pos, vecteur *vit) {
     // Initialisation du résultat.
@@ -342,7 +343,7 @@ vecteur* dSec2(double time, vecteur *pos, vecteur *vit) {
     double b  = 0.648780487805;
     double c  = 0.0317073170732;
     double d  = 0.798234880614;
-    double e  = 0.798234880614;
+    double e  = 7,83068417882;
     double f  = 0.0135039735442;
     
     // équations de notre système

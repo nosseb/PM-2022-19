@@ -266,8 +266,8 @@ void impLigneDonnees( double temps, double pos, double vit, double angle, \
     // Convertion des unitées
     pos    = pos * 100.0; // m -> cm
     vit    = vit * 100.0; // m/s ->  cm*/s
-    angle  =  angle * 180.0 / (3,141592653589); // rad -> deg
-    vitAng = vitAng * 180.0 / (3,141592653589); //  rad/s -> deg/s
+    angle  =  angle * 360.0 / (2.0*3.14); // rad -> deg
+    vitAng = vitAng * 360.0 / (2.0*3.14); //  rad/s -> deg/s
     
     printf("%e\t%e\t%e\t%e\t%e\n", temps, pos, vit, angle, vitAng);
 }
@@ -407,7 +407,7 @@ int main(int argc, char* argv[]) {
     double pas   = atof(argv[1]); // (s)
     double duree = atof(argv[2]); // (s)
     double angle = atof(argv[3]); // (deg)
-    // conversion edeg -> rad.
+    // conversion deg -> rad.
     angle = angle*2.0*3.14/360.0;
 
     debug("pas : %f\n", pas);
